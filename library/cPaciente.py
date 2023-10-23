@@ -35,21 +35,21 @@ class cDiagnostico(Enum):
     resfriado = 20
 
 class cPaciente:
-    def __init__(self, gravedad,hora_de_llegada, edad): #constructor en el primer momento que llega el paciente al hospital
+    def __init__(self, gravedad:cGravedad,hora_de_llegada:int, edad:int): #constructor en el primer momento que llega el paciente al hospital
         self.hora_de_llegada = hora_de_llegada
         self.edad = edad
         self.gravedad = 0 #por defecto es blanco; 
-        self.diagnostico=cDiagnostico[0] #defecto
+        self.diagnostico=None #defecto
         self.tiempo_de_vida =-1 #por defecto
         
-    def Asignar_diag_Random(self,pac)-> cDiagnostico:
+    def Asignar_diag_Random(self):
         # hacemos random para detertminar el diagnostico del paciente,en este enum estaran //cargadas todas las enfermedades
         diag = random.randrange(len(cDiagnostico))
-        self.settear(pac,diag)
-        return diag
+        self.settear(diag)
+        
     
-    def settear (self,pac,diag):
-        pac.diagnostico=diag
+    def settear (self,diag):
+        self.diagnostico=diag
     
     '''def calcular_tiempo_de_vida(pac):
         hora_actual = VerificarHorario()  # Debes obtener la hora actual de alguna manera

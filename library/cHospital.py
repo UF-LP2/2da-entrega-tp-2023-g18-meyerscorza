@@ -4,11 +4,7 @@ from enum import Enum
 import cEnfermero
 import cPaciente
 
-class cTurno(Enum):
-    maniana=0
-    tarde=1
-    noche=2
-    madrugada=3
+
 
 class cHospital:
     def __init__(self):
@@ -43,7 +39,7 @@ class cHospital:
             if  (lista_enfermeros_actuales[i].disponibilidad==True): #si esta libre
                 pac=self.seleccion_pacientes()#atiende pac, elije por gryddy o por programacion dinamica
                 self.setear_disponibilidad(lista_enfermeros_actuales[i],False)#ahora esta ocupado
-                self. asignacion_paciente(pac, lista_enfermeros_actuales[i])#pongo como atributo de enfermero el paciente
+                self.asignacion_paciente(pac, lista_enfermeros_actuales[i])#pongo como atributo de enfermero el paciente
                 #PONER FUNCION TIEMPO DE ATENCION
                 #ahora terminaria la consulta
                 self.eliminar_pac(pac)#funcion que elimina el paciente de su respectiva lista
