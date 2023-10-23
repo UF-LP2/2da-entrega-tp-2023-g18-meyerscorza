@@ -74,3 +74,28 @@ class cHospital:
             self.lista_urgentes.remove(pac)
         else:
             self.lista_no_urgentes.remove(pac)
+    
+    #ALGORITMO DE GREEDY
+    '''def SeleccionGreedy(self):
+        #las lista_no_urgente esta ordenada por tiempo que le quedan de vida a los pacientes 
+    '''
+
+    #ALGORITMO PROG DINAMICA
+    def SeleccionProgDinamica(cantEnfer,beneficio,Npacientes,pacientes):
+         # Crear una matriz K de (Npacientes + 1) x (cantEnfer + 1) inicializada con ceros
+        K = [[0 for x in range(cantEnfer + 1)] for x in range(Npacientes + 1)]
+
+        # Construir la matriz de manera ascendente
+        for i in range(Npacientes + 1):  # Recorrer filas
+            for w in range(cantEnfer + 1):  # Recorrer columnas
+                if i == 0 or w == 0:
+                    K[i][w] = 0
+                elif pacientes[i - 1] <= w:
+                    K[i][w] = min(beneficio[i - 1] + K[i - 1][w - pacientes[i - 1]], K[i - 1][w])
+                    #minimizo incluyendo a ese paciente y no incluyendolo,seria el de menor tiempo de espera
+                else: #no tengo suficientes enfermeros para hacer atendido ahora
+                    #no lo incluyo
+                    K[i][w] = K[i - 1][w]
+
+        return K  # Devolver la matriz K
+

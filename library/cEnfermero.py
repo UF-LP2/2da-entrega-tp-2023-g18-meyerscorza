@@ -1,11 +1,16 @@
-import cPaciente
+from library.cPaciente import cPaciente
 
 class cEnfermero:
-    def __init__(self,disponibilidad,horario_atencion,pac):
+    '''def __init__(self,disponibilidad,horario_atencion,pac):
         self.disponibilidad = disponibilidad
         self.horario_atencion= horario_atencion
-        self.pac=pac
-        
+        self.pac=pac  '''
+    
+    def __init__(self,disponibilidad,horario_atencion):
+        self.disponibilidad = disponibilidad
+        self.horario_atencion= horario_atencion
+    
+     
     def asignar_gravedad(self,p):
         #en base a los diagnosticos, me le asigno un color de gravedad
         if 0 <= p.diagnostico <= 2:
@@ -20,3 +25,4 @@ class cEnfermero:
             p.gravedad = "azul"
         else:
             p.gravedad = None
+
