@@ -1,0 +1,76 @@
+from collections import deque
+import random
+from enum import Enum
+import cEnfermero
+import cPaciente
+
+class cTurno(Enum):
+    maniana=0
+    tarde=1
+    noche=2
+    madrugada=3
+
+class cHospital:
+    def __init__(self):
+        self.multicola = deque()          # Cola para pacientes en espera
+        self.lista_urgentes = []          # Lista de pacientes urgentes
+        self.lista_no_urgentes = []       # Lista de pacientes no urgentes
+        self.lista_enfermeros = []        # Lista de enfermeros disponibles
+
+    def cargar_listas(self,pac):
+        if pac.gravedad == "rojo":
+            pac.tiempo_de_vida=0
+            self.lista_urgentes.append(pac)
+        else:
+            pac.tiempo_de_vida=pac.calcular_tiempo_de_vida(pac)#funcion que calcula cuanto tiempo le queda
+            self.lista_no_urgentes.append(pac)
+            
+    def ordenar_no_urgentes(self): #como no son urgentes, los debo atender por tiempo de vida, pero deben ser ordenadoa por tiempo de vida
+        for i in range(1, len(self.lista_no_urgentes)):
+            key = self.lista_no_urgentes[i]
+            j = i - 1
+
+            while j >= 0 and self.lista_no_urgentes[j].tiempo_de_vida > key.tiempo_de_vida:
+                self.lista_no_urgentes[j + 1] = self.lista_no_urgentes[j]
+                j = j - 1
+                self.lista_no_urgentes[j + 1] = key
+
+    def disp_enfermeros(self):
+        i=0
+        cont= 0
+        lista_enfermeros_actuales=self.Enf_actuales()#tengo lista de los enfermeros disponibles
+        while i< len(lista_enfermeros_actuales):#recorro la nueva lista
+            if  (lista_enfermeros_actuales[i].disponibilidad==True): #si esta libre
+                pac=self.seleccion_pacientes()#atiende pac, elije por gryddy o por programacion dinamica
+                self.setear_disponibilidad(lista_enfermeros_actuales[i],False)#ahora esta ocupado
+                self. asignacion_paciente(pac, lista_enfermeros_actuales[i])#pongo como atributo de enfermero el paciente
+                #PONER FUNCION TIEMPO DE ATENCION
+                #ahora terminaria la consulta
+                self.eliminar_pac(pac)#funcion que elimina el paciente de su respectiva lista
+                self. setear_disponibilidad(lista_enfermeros_actuales[i], True)  # ahora se supone que se libero
+                cont += 1
+            i+=1
+        if cont == 0:#significa que todos los enfermeros estan ocupados, caso extremo
+            print("Espere a ser atendido, todos nuestros enfermeros estan ocupados")
+
+    def Enf_actuales(self):
+        momento_del_dia = self.momento_dia()  #funcion que devuelve, maniana,tarde,noche o madrugada
+        lista_enf_disp = []
+        for i in self.lista_enfermeros:
+            if self.lista_enfermeros[i].horario_atencion == momento_del_dia:
+                lista_enf_disp.append(self.lista_enfermeros[i])
+        return lista_enf_disp
+
+    def momento_dia():
+        moment= random.randrange(len(cTurno))
+        return moment
+    
+    def  setear_disponibilidad(self,enfermero,variable_bool):
+        enfermero.disponibilidad=variable_bool
+
+    def eliminar_pac(self,pac):
+        #no se en cual de las dos de las lista esta, entocnes ponemos esas condiciones
+        if pac in self.lista_urgentes:
+            self.lista_urgentes.remove(pac)
+        else:
+            self.lista_no_urgentes.remove(pac)
