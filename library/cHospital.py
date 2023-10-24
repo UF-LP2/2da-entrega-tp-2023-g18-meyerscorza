@@ -3,12 +3,11 @@ import random
 from enum import Enum
 import cEnfermero
 import cPaciente
-
+from datetime import datetime # modulo de python para poder calcular lo hora actual
 
 
 class cHospital:
     def __init__(self):
-        self.multicola = deque()          # Cola para pacientes en espera
         self.lista_urgentes = []          # Lista de pacientes urgentes
         self.lista_no_urgentes = []       # Lista de pacientes no urgentes
         self.lista_enfermeros = []        # Lista de enfermeros disponibles
@@ -57,11 +56,11 @@ class cHospital:
                 lista_enf_disp.append(self.lista_enfermeros[i])
         return lista_enf_disp
 
-    def momento_dia():
+        ''' def momento_dia():
         moment= random.randrange(len(cTurno))
-        return moment
+        return moment'''
     
-    def  setear_disponibilidad(self,enfermero,variable_bool):
+    def setear_disponibilidad(self,enfermero,variable_bool):
         enfermero.disponibilidad=variable_bool
 
     def eliminar_pac(self,pac):
@@ -95,3 +94,19 @@ class cHospital:
 
         return K  # Devolver la matriz K
 
+ def calcular_tiempo_de_vida(pac):
+        hora_actual = VerificarHorario()  # Debes obtener la hora actual de alguna manera
+
+        tiempo_que_paso_desde_que_llego = hora_actual - pac.hora_llegada
+
+        if pac.gravedad == "naranja":
+            pac.tiempo_de_vida = 30 - tiempo_que_paso_desde_que_llego.total_seconds() / 60 #lo paso a minutos ya que opero con minutos
+        elif pac.gravedad == "amarillo":
+            pac.tiempo_de_vida = 60 - tiempo_que_paso_desde_que_llego.total_seconds() / 60
+        elif pac.gravedad == "verde":
+            pac.tiempo_de_vida = 120 - tiempo_que_paso_desde_que_llego.total_seconds() / 60
+        elif pac.gravedad == "azul":
+            pac.tiempo_de_vida = 240 - tiempo_que_paso_desde_que_llego.total_seconds() / 60
+ def VerificarHorario():
+     hora_actual=datetime(2023, 10, 24, 15, 0)
+     return hora_actual

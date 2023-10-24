@@ -51,16 +51,3 @@ class cPaciente:
     def settear (self,diag):
         self.diagnostico=diag
     
-    '''def calcular_tiempo_de_vida(pac):
-        hora_actual = VerificarHorario()  # Debes obtener la hora actual de alguna manera
-
-        tiempo_que_paso_desde_que_llegue = hora_actual - pac.hora_llegada
-
-        if pac.gravedad == "naranja":
-            pac.tiempo_de_vida = 30 - tiempo_que_paso_desde_que_llegue
-        elif pac.gravedad == "amarillo":
-            pac.tiempo_de_vida = 60 - tiempo_que_paso_desde_que_llegue
-        elif pac.gravedad == "verde":
-            pac.tiempo_de_vida = 120 - tiempo_que_paso_desde_que_llegue
-        elif pac.gravedad == "azul":
-            pac.tiempo_de_vida = 240 - tiempo_que_paso_desde_que_llegue '''
