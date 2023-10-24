@@ -35,7 +35,7 @@ class cDiagnostico(Enum):
     resfriado = 20
 
 class cPaciente:
-    def __init__(self, gravedad:cGravedad,hora_de_llegada:int, edad:int): #constructor en el primer momento que llega el paciente al hospital
+    def __init__(self,hora_de_llegada:int, edad:int): #constructor en el primer momento que llega el paciente al hospital
         self.hora_de_llegada = hora_de_llegada
         self.edad = edad
         self.gravedad = 0 #por defecto es blanco; 

@@ -1,23 +1,21 @@
 from collections import deque
-import random
-from enum import Enum
-import cEnfermero
-import cPaciente
+from library.cPaciente import cPaciente
+from library.cEnfermero import cEnfermero
 from datetime import datetime # modulo de python para poder calcular lo hora actual
 
 
 class cHospital:
     def __init__(self):
-        self.lista_urgentes = []          # Lista de pacientes urgentes
-        self.lista_no_urgentes = []       # Lista de pacientes no urgentes
-        self.lista_enfermeros = []        # Lista de enfermeros disponibles
+        self.lista_urgentes = []          # Lista de pacientes urgentes (inicializo en vacío)
+        self.lista_no_urgentes = []      # Lista de pacientes no urgentes (inicializo en vacío)
+        self.lista_enfermeros = []        # Lista de enfermeros disponibles (inicializo en vacío)
 
-    def cargar_listas(self,pac):
+    def cargar_listas(self,pac:cPaciente):
         if pac.gravedad == "rojo":
             pac.tiempo_de_vida=0
             self.lista_urgentes.append(pac)
         else:
-            pac.tiempo_de_vida=pac.calcular_tiempo_de_vida(pac)#funcion que calcula cuanto tiempo le queda
+            #pac.tiempo_de_vida=pac.calcular_tiempo_de_vida(pac)#funcion que calcula cuanto tiempo le queda
             self.lista_no_urgentes.append(pac)
             
     def ordenar_no_urgentes(self): #como no son urgentes, los debo atender por tiempo de vida, pero deben ser ordenadoa por tiempo de vida
@@ -56,7 +54,7 @@ class cHospital:
                 lista_enf_disp.append(self.lista_enfermeros[i])
         return lista_enf_disp
 
-        ''' def momento_dia():
+    '''def momento_dia():
         moment= random.randrange(len(cTurno))
         return moment'''
     
@@ -94,8 +92,8 @@ class cHospital:
 
         return K  # Devolver la matriz K
 
- def calcular_tiempo_de_vida(pac):
-        hora_actual = VerificarHorario()  # Debes obtener la hora actual de alguna manera
+    def calcular_tiempo_de_vida(self,pac):
+        hora_actual = self.VerificarHorario()  # Debes obtener la hora actual de alguna manera
 
         tiempo_que_paso_desde_que_llego = hora_actual - pac.hora_llegada
 
@@ -107,6 +105,7 @@ class cHospital:
             pac.tiempo_de_vida = 120 - tiempo_que_paso_desde_que_llego.total_seconds() / 60
         elif pac.gravedad == "azul":
             pac.tiempo_de_vida = 240 - tiempo_que_paso_desde_que_llego.total_seconds() / 60
- def VerificarHorario():
-     hora_actual=datetime(2023, 10, 24, 15, 0)
-     return hora_actual
+
+    def VerificarHorario():
+        hora_actual=datetime(2023, 10, 24, 15, 0)
+        return hora_actual

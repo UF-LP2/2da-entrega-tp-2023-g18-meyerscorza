@@ -28,3 +28,4 @@ class cEnfermero:
         else:
             p.gravedad = None
 
+ 
