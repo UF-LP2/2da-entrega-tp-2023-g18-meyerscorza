@@ -35,12 +35,14 @@ class cDiagnostico(Enum):
     resfriado = 20
 
 class cPaciente:
-    def __init__(self,hora_de_llegada:int, edad:int): #constructor en el primer momento que llega el paciente al hospital
+    def __init__(self,hora_de_llegada:int, nacimiento:str,nombre:str,apellido:str): #constructor en el primer momento que llega el paciente al hospital
         self.hora_de_llegada = hora_de_llegada
-        self.edad = edad
+        self.nacimiento = nacimiento
         self.gravedad = 0 #por defecto es blanco; 
         self.diagnostico=None #defecto
         self.tiempo_de_vida =-1 #por defecto
+        self.nombre=nombre
+        self.apellido=apellido
         
     def Asignar_diag_Random(self):
         # hacemos random para detertminar el diagnostico del paciente,en este enum estaran //cargadas todas las enfermedades

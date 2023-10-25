@@ -1,16 +1,14 @@
 from library.cPaciente import cPaciente
 from enum import Enum
 
-class cTurno(Enum):
-    maniana=0
-    tarde=1
-    noche=2
-    madrugada=3
+
 
 class cEnfermero:
-    def __init__(self,disponibilidad:bool,horario_atencion:cTurno):
-        self.disponibilidad = disponibilidad
-        self.horario_atencion= horario_atencion
+    def __init__(self,id:int,nombre:str,apellido:str):
+        self.nombre=nombre
+        self.disponibilidad = True
+        self.id=id
+        self.apellido=apellido
         self.pac=None
     
     def asignar_gravedad(self,p:cPaciente):

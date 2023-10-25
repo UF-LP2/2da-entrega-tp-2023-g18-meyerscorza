@@ -2,7 +2,7 @@ import pytest
 from library.cPaciente import cPaciente 
 
 def test_Diagnostico():
-    paciente = cPaciente(9,25)
+    paciente = cPaciente(9,"25/08/2002","Martina","Meyer")
     paciente.Asignar_diag_Random()
     # Verifica que el resultado esté en el rango esperado (0 a 20 según tu enum) y que se sette bien
     assert paciente.diagnostico <21
