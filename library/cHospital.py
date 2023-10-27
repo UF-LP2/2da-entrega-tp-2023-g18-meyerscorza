@@ -1,6 +1,4 @@
-from collections import deque
-from library.cPaciente import cPaciente
-from library.cEnfermero import cEnfermero
+from src.cPaciente import cPaciente
 from datetime import datetime # modulo de python para poder calcular lo hora actual
 
 

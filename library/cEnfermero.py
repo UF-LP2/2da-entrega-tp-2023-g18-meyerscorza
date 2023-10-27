@@ -1,6 +1,4 @@
-from library.cPaciente import cPaciente
-from enum import Enum
-
+from src.cPaciente import cPaciente
 
 
 class cEnfermero:

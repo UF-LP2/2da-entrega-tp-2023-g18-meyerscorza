@@ -1,5 +1,5 @@
 
-from cPaciente import cPaciente
+from src.cPaciente import cPaciente
 
 class cMedico:
     def __init__(self, NroMatricula: int):

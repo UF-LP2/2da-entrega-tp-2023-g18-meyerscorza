@@ -1,9 +1,10 @@
 import random
-from datetime import datetime, timedelta
-from library.cPaciente import cPaciente
+from datetime import datetime
+from src.cPaciente import cPaciente
 from library.cHospital import cHospital
-from library.cPaciente import cGravedad
 from library.cEnfermero import cEnfermero
+from library.leer_archivos import readFile
+from library.leer_archivos import readFile2
 hora_actual = datetime(2023, 10, 24, 15, 0,0,0)  # Hora actual de la simulación
 
 
@@ -23,17 +24,19 @@ hora_actual = datetime(2023, 10, 24, 15, 0,0,0)  # Hora actual de la simulación
     return hora_llegada'''
 
 def main() -> None:
-#creamos pacientes randoms con un for
-  for i in range (10):
+  enfermeros=readFile2()
+  pacientes=readFile()
 
-    edad = random.randint(10, 100)
-    hora_llegada = hora_de_llegada_aleatoria()
-    paciente=cPaciente(hora_llegada ,edad)
+
+
+
 
 
 
 if __name__ == "__main__":
-  pac1=cPaciente(9,15)
+
+
+  '''pac1=cPaciente(9,15)
   pac2=cPaciente(5,31)
   pac1.Asignar_diag_Random()
   pac2.Asignar_diag_Random()
@@ -43,4 +46,4 @@ if __name__ == "__main__":
 
   hospital=cHospital()
   hospital.cargar_listas(pac1)
-  hospital.cargar_listas(pac2)
+  hospital.cargar_listas(pac2)'''
