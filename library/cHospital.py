@@ -13,9 +13,9 @@ class cHospital:
             pac.tiempo_de_vida=0
             self.lista_urgentes.append(pac)
         else:
-            #pac.tiempo_de_vida=pac.calcular_tiempo_de_vida(pac)#funcion que calcula cuanto tiempo le queda
+            pac.tiempo_de_vida=pac.calcular_tiempo_de_vida(pac)#funcion que calcula cuanto tiempo le queda
             self.lista_no_urgentes.append(pac)
-            
+            self.ordenar_no_urgentes()
     def ordenar_no_urgentes(self): #como no son urgentes, los debo atender por tiempo de vida, pero deben ser ordenadoa por tiempo de vida
         for i in range(1, len(self.lista_no_urgentes)):
             key = self.lista_no_urgentes[i]
@@ -68,7 +68,8 @@ class cHospital:
     
     #ALGORITMO DE GREEDY
     '''def SeleccionGreedy(self):
-        #las lista_no_urgente esta ordenada por tiempo que le quedan de vida a los pacientes 
+        #las lista_no_urgente esta ordenada por tiempo que le quedan de vida a los pacientes
+         
     '''
 
     #ALGORITMO PROG DINAMICA
@@ -104,6 +105,6 @@ class cHospital:
         elif pac.gravedad == "azul":
             pac.tiempo_de_vida = 240 - tiempo_que_paso_desde_que_llego.total_seconds() / 60
 
-    def VerificarHorario():
-        hora_actual=datetime(2023, 10, 24, 15, 0)
+    def VerificarHorario(self):
+        hora_actual=datetime.now()
         return hora_actual

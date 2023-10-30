@@ -4,7 +4,6 @@ from src.cPaciente import cPaciente
 from library.cHospital import cHospital
 from library.cEnfermero import cEnfermero
 from library.leer_archivos import readFile
-from library.leer_archivos import readFile2
 hora_actual = datetime(2023, 10, 24, 15, 0,0,0)  # Hora actual de la simulación
 
 
@@ -23,26 +22,25 @@ hora_actual = datetime(2023, 10, 24, 15, 0,0,0)  # Hora actual de la simulación
 
     return hora_llegada'''
 
+
 def main() -> None:
-  enfermeros=readFile2()
-  pacientes=readFile()
+    pacientes = readFile("pacientes.csv")
+    enfermeros = readFile("enfermeros.csv")
 
+    for i in range(1, len(pacientes)):
+     # vemos los enfermeros_actuales()
+    # vemos los de los que hay cuales estan de esos disponibles
+    #le asigno gravedad paciente
 
-
-
-
-
+    #se ejecutan las cosas y llamo a disp enfermeros
 
 if __name__ == "__main__":
-
+  main()
 
   '''pac1=cPaciente(9,15)
   pac2=cPaciente(5,31)
-  pac1.Asignar_diag_Random()
-  pac2.Asignar_diag_Random()
   enfermero=cEnfermero(True,1)
   enfermero.asignar_gravedad(pac1)
-  enfermero.asignar_gravedad(pac2)
 
   hospital=cHospital()
   hospital.cargar_listas(pac1)
