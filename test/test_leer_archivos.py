@@ -1,9 +1,10 @@
 import pytest
 from library.leer_archivos import readFile
-
+import csv
+from typing import List
 @pytest.fixture#aclara que se ejecutará en el momento adecuado antes de que las pruebas  requeridas comiencen a ejecutarse.
 def archivo_prueba():
-    return "pacientes.csv"
+    return "./src/pacientes2.csv"
 
 def test_leer_archivos(archivo_prueba):
     resultado = readFile(archivo_prueba)

@@ -1,5 +1,5 @@
 import csv
-
+from typing import List
 
 def readFile(archivo):
     lista = []

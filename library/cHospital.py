@@ -1,7 +1,7 @@
 from src.cPaciente import cPaciente
 from datetime import datetime # modulo de python para poder calcular lo hora actual
-
-
+import random
+from typing import List
 class cHospital:
     def __init__(self):
         self.lista_urgentes = []          # Lista de pacientes urgentes (inicializo en vacío)
@@ -67,12 +67,69 @@ class cHospital:
             self.lista_no_urgentes.remove(pac)
     
     #ALGORITMO DE GREEDY
-    '''def SeleccionGreedy(self):
-        #las lista_no_urgente esta ordenada por tiempo que le quedan de vida a los pacientes
-         
-    '''
+    def SeleccionGreedy(self):
+        # las lista_no_urgente está ordenada por el tiempo que le queda de vida a los pacientes
+        empeoraron = self.empeoro_pac_no_urgente()  # devuelve un array con los que empeoraron
 
-    #ALGORITMO PROG DINAMICA
+        if self.lista_urgentes and len(empeoraron) == 0:
+            # Mandamos el primero que es el más urgente, y cuando termina la atención se elimina de la lista
+            return self.lista_urgentes[0]
+        elif self.lista_urgentes and len(empeoraron) > 0:
+            pac = self.dar_prioridad(empeoraron)  # va a tener que dar prioridad entre los más urgentes que empeoraron de la nada
+            return pac
+        elif not self.lista_urgentes and len(empeoraron) > 0:
+            pac = self.dar_prioridad(empeoraron)
+            return pac
+        else:
+            return self.lista_no_urgentes[0]
+    def dar_prioridad(self, empeoraron):
+        if self.lista_urgentes:# si no está vacío, agrega el de la lista de rojo para poder comparar
+            empeoraron.append(self.lista_urgentes[0])
+
+        paciente_mas_joven = None# inicializo paciente
+        edad_mas_joven = float('4345')# inicializo edad para poder devolver la mínima
+
+        for i in range(len(empeoraron)):
+            edad_paciente = self.calcular_edad(empeoraron[i].nacimiento)
+            if edad_paciente < edad_mas_joven:# comparo si la edad que entra es menor a la anterior
+                edad_mas_joven = edad_paciente
+                paciente_mas_joven = empeoraron[i]
+
+        return paciente_mas_joven
+
+    def calcular_edad(self, fecha_nacimiento):
+        hoy = datetime.now()
+        edad = hoy.year - fecha_nacimiento.year
+        if hoy.month < fecha_nacimiento.month or (
+                hoy.month == fecha_nacimiento.month and hoy.day < fecha_nacimiento.day):  # vemos la edad si aún no ha tenido su cumpleaños este año
+            edad -= 1# le restamos uno si todavia no cumplio
+        return edad
+
+    def empeoro_pac_no_urgente(self):
+        empeoraron = []
+        for i in range(len(self.lista_no_urgentes)):
+            prob_que_empeoro = 0  # Inicializamos la variable
+            if self.lista_no_urgentes[i].gravedad == "amarillo":
+                prob_que_empeoro = random.randint(1, 6)
+            elif self.lista_no_urgentes[i].gravedad == "verde":
+                prob_que_empeoro = random.randint(1, 10)
+            elif self.lista_no_urgentes[i].gravedad == "azul":
+                prob_que_empeoro = random.randint(1, 18)
+
+            if prob_que_empeoro == 1:
+                self.lista_no_urgentes[i].gravedad = "rojo"
+                empeoraron.append(self.lista_no_urgentes[i])
+
+        return empeoraron
+  ''' 
+
+ 
+    
+
+   
+'''
+
+    ##ALGORITMO PROG DINAMICA
     def SeleccionProgDinamica(cantEnfer,beneficio,Npacientes,pacientes):
          # Crear una matriz K de (Npacientes + 1) x (cantEnfer + 1) inicializada con ceros
         K = [[0 for x in range(cantEnfer + 1)] for x in range(Npacientes + 1)]

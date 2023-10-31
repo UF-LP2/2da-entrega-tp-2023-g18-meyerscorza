@@ -4,6 +4,7 @@ from src.cPaciente import cPaciente
 from library.cHospital import cHospital
 from library.cEnfermero import cEnfermero
 from library.leer_archivos import readFile
+from typing import List
 hora_actual = datetime(2023, 10, 24, 15, 0,0,0)  # Hora actual de la simulación
 
 

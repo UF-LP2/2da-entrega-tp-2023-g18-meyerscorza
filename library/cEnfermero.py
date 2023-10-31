@@ -1,6 +1,6 @@
 from src.cPaciente import cPaciente
 from library.cHospital import cHospital
-
+from typing import List
 class cEnfermero:
     def __init__(self,id:int,nombre:str,apellido:str):
         self.nombre=nombre
