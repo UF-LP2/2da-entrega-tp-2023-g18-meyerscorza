@@ -52,9 +52,28 @@ class cHospital:
                 lista_enf_disp.append(self.lista_enfermeros[i])
         return lista_enf_disp
 
-    '''def momento_dia():
-        moment= random.randrange(len(cTurno))
-        return moment'''
+    def momento_dia(self)-> str:
+        # Obtiene la hora actual
+        hora_actual = datetime.now().time()
+
+        # Define los rangos de tiempo para cada turno
+        #REVISAR ESTOS LIMITES DE TIEMPO ASI EN TIEMPO DE EJECUCION DE PROGRAMA LOS PODEMOS LLEGAR A VER
+        turno_madrugada= (datetime.strptime("23:00:00", "%H:%M:%S").time(), datetime.strptime("06:00:00", "%H:%M:%S").time())
+        turno_maniana = (datetime.strptime("06:00:00", "%H:%M:%S").time(), datetime.strptime("10:00:00", "%H:%M:%S").time())
+        turno_tarde = (datetime.strptime("10:00:00", "%H:%M:%S").time(), datetime.strptime("16:00:00", "%H:%M:%S").time())
+        turno_noche = (datetime.strptime("16:00:00", "%H:%M:%S").time(), datetime.strptime("23:00:00", "%H:%M:%S").time())
+
+        # Compara la hora actual con los rangos de tiempo y determina el turno
+        if turno_noche[0] <= hora_actual < turno_noche[1]:
+            turno = "Noche"
+        elif turno_maniana[0] <= hora_actual < turno_maniana[1]:
+            turno = "Mañana"
+        elif turno_tarde[0] <= hora_actual < turno_tarde[1]:
+            turno = "Tarde"
+        else:
+            turno = "Madrugada"
+        
+        return turno
     
     def setear_disponibilidad(self,enfermero,variable_bool):
         enfermero.disponibilidad=variable_bool
@@ -82,6 +101,7 @@ class cHospital:
             return pac
         else:
             return self.lista_no_urgentes[0]
+        
     def dar_prioridad(self, empeoraron):
         if self.lista_urgentes:# si no está vacío, agrega el de la lista de rojo para poder comparar
             empeoraron.append(self.lista_urgentes[0])
@@ -121,7 +141,7 @@ class cHospital:
                 empeoraron.append(self.lista_no_urgentes[i])
 
         return empeoraron
-  ''' 
+
 
  
     
@@ -164,4 +184,5 @@ class cHospital:
 
     def VerificarHorario(self):
         hora_actual=datetime.now()
-        return hora_actual
+        return hora_actual}
+    '''
