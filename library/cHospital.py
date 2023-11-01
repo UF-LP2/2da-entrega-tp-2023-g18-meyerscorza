@@ -8,12 +8,12 @@ class cHospital:
         self.lista_no_urgentes = []      # Lista de pacientes no urgentes (inicializo en vacío)
         self.lista_enfermeros = []        # Lista de enfermeros disponibles (inicializo en vacío)
 
-    def cargar_listas(self,pac:cPaciente):
+    def cargar_listas(self,pac:cPaciente,hora_actual):
         if pac.gravedad == "rojo":
             pac.tiempo_de_vida=0
             self.lista_urgentes.append(pac)
         else:
-            pac.tiempo_de_vida=pac.calcular_tiempo_de_vida(pac)#funcion que calcula cuanto tiempo le queda
+            pac.tiempo_de_vida=self.calcular_tiempo_de_vida(pac,hora_actual)#funcion que calcula cuanto tiempo le queda
             self.lista_no_urgentes.append(pac)
             self.ordenar_no_urgentes()
     def ordenar_no_urgentes(self): #como no son urgentes, los debo atender por tiempo de vida, pero deben ser ordenadoa por tiempo de vida
@@ -57,7 +57,6 @@ class cHospital:
         hora_actual = datetime.now().time()
 
         # Define los rangos de tiempo para cada turno
-        #REVISAR ESTOS LIMITES DE TIEMPO ASI EN TIEMPO DE EJECUCION DE PROGRAMA LOS PODEMOS LLEGAR A VER
         turno_madrugada= (datetime.strptime("23:00:00", "%H:%M:%S").time(), datetime.strptime("06:00:00", "%H:%M:%S").time())
         turno_maniana = (datetime.strptime("06:00:00", "%H:%M:%S").time(), datetime.strptime("10:00:00", "%H:%M:%S").time())
         turno_tarde = (datetime.strptime("10:00:00", "%H:%M:%S").time(), datetime.strptime("16:00:00", "%H:%M:%S").time())
@@ -142,8 +141,18 @@ class cHospital:
 
         return empeoraron
 
+    def calcular_tiempo_de_vida(self, pac,hora_actual):
+        #hacer una funcion que me devuelva cunato tardo en atenderse cdependiendo su color
+        tiempo_que_paso_desde_que_llego = hora_actual - pac.hora_llegada
 
- 
+        if pac.gravedad == "naranja":
+            pac.tiempo_de_vida = 30 - tiempo_que_paso_desde_que_llego.total_seconds() / 60  # lo paso a minutos ya que opero con minutos
+        elif pac.gravedad == "amarillo":
+            pac.tiempo_de_vida = 60 - tiempo_que_paso_desde_que_llego.total_seconds() / 60
+        elif pac.gravedad == "verde":
+            pac.tiempo_de_vida = 120 - tiempo_que_paso_desde_que_llego.total_seconds() / 60
+        elif pac.gravedad == "azul":
+            pac.tiempo_de_vida = 240 - tiempo_que_paso_desde_que_llego.total_seconds() / 60
     
 
    
@@ -166,23 +175,7 @@ class cHospital:
                     #no lo incluyo
                     K[i][w] = K[i - 1][w]
 
-        return K  # Devolver la matriz K
+        return K  # Devolver la matriz K '''
 
-    def calcular_tiempo_de_vida(self,pac):
-        hora_actual = self.VerificarHorario()  # Debes obtener la hora actual de alguna manera
 
-        tiempo_que_paso_desde_que_llego = hora_actual - pac.hora_llegada
 
-        if pac.gravedad == "naranja":
-            pac.tiempo_de_vida = 30 - tiempo_que_paso_desde_que_llego.total_seconds() / 60 #lo paso a minutos ya que opero con minutos
-        elif pac.gravedad == "amarillo":
-            pac.tiempo_de_vida = 60 - tiempo_que_paso_desde_que_llego.total_seconds() / 60
-        elif pac.gravedad == "verde":
-            pac.tiempo_de_vida = 120 - tiempo_que_paso_desde_que_llego.total_seconds() / 60
-        elif pac.gravedad == "azul":
-            pac.tiempo_de_vida = 240 - tiempo_que_paso_desde_que_llego.total_seconds() / 60
-
-    def VerificarHorario(self):
-        hora_actual=datetime.now()
-        return hora_actual}
-    '''

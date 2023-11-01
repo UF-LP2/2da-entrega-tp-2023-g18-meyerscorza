@@ -11,7 +11,7 @@ class cEnfermero:
         self.hospital = cHospital()
     def asignar_gravedad(self,paciente:cPaciente):
         #en base a los diagnosticos, me le asigno un color de gravedad
-       #asigno hora de llegada al paciente
+       #asigno hora de llegada al paciente ES EL NOW
 
         if 0 <= paciente.diagnostico <= 2:
             paciente.gravedad = 1
@@ -25,8 +25,6 @@ class cEnfermero:
             paciente.gravedad = 5
         else:
             paciente.gravedad = None
-        #random de hora para cada color, si es amarillo random entre 0 y 30 y asi con todos
-        #mi UNICO PROBLEMA VA A SER QUE ENTRE LOS QUE SON DE UN MISMO COLOR NOS HALLA UNO QUE ENTRE DESPUES Y TENGA MENOR HORA DE LLEGADA SERIA ILOGICO
-        # aca podriamos asignar el tiempo de ahora pero sumarle siempre algo para que la diferencia no se en nanosegundos de tiempo de ejecucion
+
         self.hospital.cargar_listas(paciente)
  
