@@ -8,6 +8,7 @@ class cHospital:
         self.lista_no_urgentes = []      # Lista de pacientes no urgentes (inicializo en vacío)
         self.lista_enfermerosDisp = []     # Lista de enfermeros disponibles (inicializo en vacío)
         self.lista_enfermeros=[]
+        self.lista_pacientesTotales=[]
 
     def cargar_listas(self,pac:cPaciente,hora_actual):
         if pac.gravedad == "rojo":
@@ -45,9 +46,35 @@ class cHospital:
         if cont == 0:#significa que todos los enfermeros estan ocupados, caso extremo
             print("Espere a ser atendido, todos nuestros enfermeros estan ocupados")
 
-    def Enf_actuales(self):
+    def Enf_actuales(self): #TESTING
         momento_del_dia = self.momento_dia()  #funcion que devuelve, maniana,tarde,noche o madrugada
         lista_enf_disp = []
+        largo=len(self.lista_enfermeros)
+        cant=0
+        num=random.randint(1,largo)
+        if momento_del_dia =="Madrugada": #elijo solo a 1 
+            cant=0
+        elif momento_del_dia=="Maniana": #elijo a 2
+            cant=2
+        elif momento_del_dia=="Tarde": #elijo a 5
+            cant=5
+        elif momento_del_dia=="Noche": #elijo a 3
+            cant=3
+        else:
+            raise ValueError("Momento del día no válido")
+        i=0
+       
+        if self.lista_enfermeros: #si no esta vacia la lista entra en este if
+                 while i<=cant: #dependiendo del turno llamo a nuevos enfermeros disponibles
+                    enfermero_aleatorio = random.choice(self.lista_enfermeros)  # Elige un enfermero aleatorio
+                    self.lista_enfermerosDisp.append(enfermero_aleatorio)  # Agrega el enfermero a la lista de enfermeros disp en ese turno del hospital
+                    i=i+1
+        else:
+                raise Exception("No hay enfermeros en la lista")
+            
+            
+        
+
         for i in self.lista_enfermeros:
             if self.lista_enfermeros[i].horario_atencion == momento_del_dia:
                 lista_enf_disp.append(self.lista_enfermeros[i])
@@ -67,7 +94,7 @@ class cHospital:
         if turno_noche[0] <= hora_actual < turno_noche[1]:
             turno = "Noche"
         elif turno_maniana[0] <= hora_actual < turno_maniana[1]:
-            turno = "Mañana"
+            turno = "Maniana"
         elif turno_tarde[0] <= hora_actual < turno_tarde[1]:
             turno = "Tarde"
         else:
