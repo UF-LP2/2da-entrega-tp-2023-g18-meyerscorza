@@ -6,7 +6,8 @@ class cHospital:
     def __init__(self):
         self.lista_urgentes = []          # Lista de pacientes urgentes (inicializo en vacío)
         self.lista_no_urgentes = []      # Lista de pacientes no urgentes (inicializo en vacío)
-        self.lista_enfermeros = []        # Lista de enfermeros disponibles (inicializo en vacío)
+        self.lista_enfermerosDisp = []     # Lista de enfermeros disponibles (inicializo en vacío)
+        self.lista_enfermeros=[]
 
     def cargar_listas(self,pac:cPaciente,hora_actual):
         if pac.gravedad == "rojo":
