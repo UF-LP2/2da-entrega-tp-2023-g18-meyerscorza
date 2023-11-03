@@ -2,19 +2,8 @@ import csv
 from typing import List
 from library.cHospital import cHospital
 
-'''def readFile(archivo):
-    lista = []
-    try:
-        with open(archivo) as file:
-            reader = csv.reader(file)
-            for i in reader:
-                lista.append(i)
-
-        return lista
-    except FileNotFoundError:  # utilizo excepcion que tiene Python para archivos no encontrados
-        raise Exception("El archivo no se encuentra")'''
-
-def readFileEnfermeros(Hospital:cHospital): #HACER EL TESTING 
+#funciones que andan
+def readFileEnfermeros(Hospital:cHospital):
     try:
         with open(r"Enfermeros.csv") as file:
             reader = csv.reader(file)
@@ -24,7 +13,7 @@ def readFileEnfermeros(Hospital:cHospital): #HACER EL TESTING
     except FileNotFoundError:  # utilizo excepcion que tiene Python para archivos no encontrados
         raise Exception("El archivo no se encuentra")
 
-def readFilePacientes(Hospital:cHospital): #HACER EL TESTING 
+def readFilePacientes(Hospital:cHospital): 
     try:
         with open(r"Pacientes.csv") as file:
             reader = csv.reader(file)

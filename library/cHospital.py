@@ -7,8 +7,8 @@ class cHospital:
         self.lista_urgentes = []          # Lista de pacientes urgentes (inicializo en vacío)
         self.lista_no_urgentes = []      # Lista de pacientes no urgentes (inicializo en vacío)
         self.lista_enfermerosDisp = []     # Lista de enfermeros disponibles (inicializo en vacío)
-        self.lista_enfermeros=[]
-        self.lista_pacientesTotales=[]
+        self.lista_enfermeros=[]            #utilizo para cuando leeo el archivo
+        self.lista_pacientesTotales=[]      #utilizo para cuando leeo el archivo
 
     def cargar_listas(self,pac:cPaciente,hora_actual):
         if pac.gravedad == "rojo":
@@ -46,14 +46,13 @@ class cHospital:
         if cont == 0:#significa que todos los enfermeros estan ocupados, caso extremo
             print("Espere a ser atendido, todos nuestros enfermeros estan ocupados")
 
-    def Enf_actuales(self): #TESTING
-        momento_del_dia = self.momento_dia()  #funcion que devuelve, maniana,tarde,noche o madrugada
-        lista_enf_disp = []
-        largo=len(self.lista_enfermeros)
+    def Enf_actuales(self,hora_actual:datetime): #TESTING
+        momento_del_dia = self.momento_dia(hora_actual)  #funcion que devuelve, maniana,tarde,noche o madrugada
+    
         cant=0
-        num=random.randint(1,largo)
+        
         if momento_del_dia =="Madrugada": #elijo solo a 1 
-            cant=0
+            cant=1
         elif momento_del_dia=="Maniana": #elijo a 2
             cant=2
         elif momento_del_dia=="Tarde": #elijo a 5
@@ -73,9 +72,8 @@ class cHospital:
                 raise Exception("No hay enfermeros en la lista")
             
 
-    def momento_dia(self)-> str:
-        # Obtiene la hora actual
-        hora_actual = datetime.now().time()
+    def momento_dia(self,hora_actual:datetime)-> str:
+       
 
         # Define los rangos de tiempo para cada turno
         turno_madrugada= (datetime.strptime("23:00:00", "%H:%M:%S").time(), datetime.strptime("06:00:00", "%H:%M:%S").time())
