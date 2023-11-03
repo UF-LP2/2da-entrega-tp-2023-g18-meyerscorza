@@ -1,55 +1,19 @@
 
-import random
-from enum import Enum
-
-class cGravedad(Enum):
-    blanco=0
-    rojo=1
-    naranja=2
-    amarillo=3
-    verde=4
-    azul=5
-
-#creamos enum para crear diagnosticos
-class cDiagnostico(Enum):
-    paro_cardiaco=0
-    insuficiencia_respiratoria_grave=1
-    politraumatismo_grave = 2
-    coma = 3
-    convulsiones = 4
-    hemorragia_digestiva = 5
-    isquemia = 6
-    cefalea_brusca = 7
-    paresia = 8
-    hipertensión_arterial = 9
-    vértigo_con_afectación_vegetativa = 10
-    síncope = 11
-    urgencias_psiquiátricas = 12
-    Otalgias = 13
-    odontologías = 14
-    dolor_leve = 15
-    traumatismo = 16
-    esguince = 17
-    Tos = 18
-    cefalea_leve = 19
-    resfriado = 20
-
 class cPaciente:
-    def __init__(self,hora_de_llegada:int, nacimiento:str,nombre:str,apellido:str): #constructor en el primer momento que llega el paciente al hospital
-        self.hora_de_llegada = hora_de_llegada
-        self.nacimiento = nacimiento
-        self.gravedad = 0 #por defecto es blanco; 
+    def __init__(self,id:int, nacimiento:str,nombre:str,apellido:str,sin1:str,sin2:str,sin3:str): #constructor en el primer momento que llega el paciente al hospital
+        self.hora_de_llegada = 0
+        self.nacimiento=nacimiento
+        self.gravedad = "blanco"
         self.diagnostico=None #defecto
         self.tiempo_de_vida =-1 #por defecto
         self.nombre=nombre
+        self.idPaciente=id
         self.apellido=apellido
+        self.sintoma1=sin1
+        self.sintoma2=sin2
+        self.sintoma3=sin3
         
-    def Asignar_diag_Random(self):
-        # hacemos random para detertminar el diagnostico del paciente,en este enum estaran //cargadas todas las enfermedades
-        diag = random.randrange(len(cDiagnostico))
-        self.settear(diag)
-        
-    
+
     def settear (self,diag):
         self.diagnostico=diag
     

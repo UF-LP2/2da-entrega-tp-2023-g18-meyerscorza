@@ -26,7 +26,7 @@ def readFileEnfermeros(Hospital:cHospital): #HACER EL TESTING
 
 def readFilePacientes(Hospital:cHospital): #HACER EL TESTING 
     try:
-        with open(r"pacientes.csv") as file:
+        with open(r"Pacientes.csv") as file:
             reader = csv.reader(file)
             for i in reader:
                 Hospital.lista_pacientesTotales.append(i)

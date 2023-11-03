@@ -40,7 +40,7 @@ class cHospital:
                 #PONER FUNCION TIEMPO DE ATENCION
                 #ahora terminaria la consulta
                 self.eliminar_pac(pac)#funcion que elimina el paciente de su respectiva lista
-                self. setear_disponibilidad(lista_enfermeros_actuales[i], True)  # ahora se supone que se libero
+                #self. setear_disponibilidad(lista_enfermeros_actuales[i], True) #esto esta en enfermeros
                 cont += 1
             i+=1
         if cont == 0:#significa que todos los enfermeros estan ocupados, caso extremo
@@ -72,13 +72,6 @@ class cHospital:
         else:
                 raise Exception("No hay enfermeros en la lista")
             
-            
-        
-
-        for i in self.lista_enfermeros:
-            if self.lista_enfermeros[i].horario_atencion == momento_del_dia:
-                lista_enf_disp.append(self.lista_enfermeros[i])
-        return lista_enf_disp
 
     def momento_dia(self)-> str:
         # Obtiene la hora actual
@@ -102,8 +95,7 @@ class cHospital:
         
         return turno
     
-    def setear_disponibilidad(self,enfermero,variable_bool):
-        enfermero.disponibilidad=variable_bool
+
 
     def eliminar_pac(self,pac):
         #no se en cual de las dos de las lista esta, entocnes ponemos esas condiciones

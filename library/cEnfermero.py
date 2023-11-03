@@ -8,8 +8,8 @@ class cEnfermero:
         self.id=id
         self.apellido=apellido
         self.pac=None
-        self.hospital = cHospital()
-    def asignar_gravedad(self,paciente:cPaciente):
+        
+    def asignar_gravedad(self,paciente:cPaciente,Hospital:cHospital):
         #en base a los diagnosticos, me le asigno un color de gravedad
        #asigno hora de llegada al paciente ES EL NOW
 
@@ -26,5 +26,36 @@ class cEnfermero:
         else:
             paciente.gravedad = None
 
-        self.hospital.cargar_listas(paciente)
+        Hospital.cargar_listas(paciente)
+    
+    def set_disponibilidad(self,a:bool):
+        self.disponibilidad=a
  
+    def AsignoGravedadGreedy(self,paciente:cPaciente):
+        #entre los 3 sintomas que tiene el paciente tengo que ver el mas grave y en relacion a ese elijo el color
+        color=self.colorSintomaGrave(paciente)
+    
+    def colorSintomaGrave(paciente:cPaciente):
+        listarojo={"paro_cardiaco","insuficiencia_respiratoria_grave","politraumatismo_grave"}
+        listanaranja={"coma","convulsiones","hemorragia_digestiva","isquemia"}
+        listaamarillo={"cefalea_brusca","paresia","hipertensión_arterial","vértigo_con_afectación_vegetativa","síncope","urgencias_psiquiátricas"}
+        listaverde={"otalgias","odontologías","dolor_leve","traumatismo","esguince"}
+        listaazul={"tos","cefalea_leve","resfriado"}
+        
+        if paciente.sintoma1 in listarojo or paciente.sintoma2 in listarojo or paciente.sintoma3 in listarojo:
+            #alguno de los sintomas representa al rojo
+            return "rojo"
+        elif paciente.sintoma1 in listanaranja or paciente.sintoma2 in listanaranja or paciente.sintoma3 in listanaranja:
+            #alguno de los sintomas representa al naranja 
+            return "naranja"
+        elif paciente.sintoma1 in listaamarillo or paciente.sintoma2 in listaamarillo or paciente.sintoma3 in listaamarillo:
+            #alguno de los sintomas representa al amarillo
+            return "amarillo"
+        elif paciente.sintoma1 in listaverde or paciente.sintoma2 in listaverde or paciente.sintoma3 in listaverde:
+            #alguno de los sintomas representa al verde
+            return "verde"
+        elif paciente.sintoma1 in listaazul or paciente.sintoma2 in listaazul or paciente.sintoma3 in listaazul:
+            #alguno de los sintomas representa al azul
+            return "azul"
+        
+        
