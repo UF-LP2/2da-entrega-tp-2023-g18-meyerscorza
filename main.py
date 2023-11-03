@@ -3,15 +3,20 @@ from datetime import datetime
 from src.cPaciente import cPaciente
 from library.cHospital import cHospital
 from library.cEnfermero import cEnfermero
-from library.leer_archivos import readFile
+from library.leer_archivos import readFileEnfermeros
+from library.leer_archivos import readFilePacientes
 from typing import List
 
 def main() -> None:
-    hora_actual = datetime(2023, 10, 24, 0, 0, 0, 0)  # Hora actual de la simulación
+    Hospital=cHospital()
+    lista=readFileEnfermeros(Hospital)
+    print(lista) #funcionnooooo!!!!!!!!!
+
+    '''hora_actual = datetime(2023, 10, 24, 0, 0, 0, 0)  # Hora actual de la simulación
     pacientes = readFile("pacientes.csv")
     enfermeros = readFile("enfermeros.csv")
 
-    for i in range(1, len(pacientes)):
+    for i in range(1, len(pacientes)):'''
 
         #vemos los enfermeros_actuales()#veo q turno es
     # vemos de los que hay, cuales estan de esos disponibles

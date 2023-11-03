@@ -16,7 +16,7 @@ from library.cHospital import cHospital
 
 def readFileEnfermeros(Hospital:cHospital): #HACER EL TESTING 
     try:
-        with open(r"enfermeros.csv") as file:
+        with open(r"Enfermeros.csv") as file:
             reader = csv.reader(file)
             for i in reader:
                 Hospital.lista_enfermeros.append(i)
