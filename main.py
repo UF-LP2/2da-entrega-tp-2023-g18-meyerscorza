@@ -10,7 +10,8 @@ from typing import List
 def main() -> None:
     Hospital=cHospital()
     lista=readFileEnfermeros(Hospital)
-    print(lista) #funcionnooooo!!!!!!!!!
+    lista2=readFilePacientes(Hospital)
+    print(lista2) 
 
     '''hora_actual = datetime(2023, 10, 24, 0, 0, 0, 0)  # Hora actual de la simulación
     pacientes = readFile("pacientes.csv")
