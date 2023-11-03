@@ -1,20 +1,21 @@
+import random
 from datetime import datetime
-from typing import List
-from main import hora_actual  # Importa hora_actual desde main.py
+from src.cPaciente import cPaciente
+
 class cHospital:
-    def __init__(self):
+    def __init__(self, hora_actual: datetime):
         self.lista_urgentes = []          # Lista de pacientes urgentes (inicializo en vacío)
         self.lista_no_urgentes = []      # Lista de pacientes no urgentes (inicializo en vacío)
         self.lista_enfermerosDisp = []     # Lista de enfermeros disponibles (inicializo en vacío)
         self.lista_enfermeros=[]            #utilizo para cuando leeo el archivo
         self.lista_pacientesTotales=[]      #utilizo para cuando leeo el archivo
-
-    def cargar_listas(self, pac: cPaciente, hora_actual:datetime):
+        self.hora_actual = hora_actual  # Almacena la hora_actual como atributo
+    def cargar_listas(self, pac:cPaciente):
         if pac.gravedad == "rojo":
             pac.tiempo_de_vida = 0
             self.lista_urgentes.append(pac)
         else:
-            self.calcular_tiempo_de_vida(pac,hora_actual)#funcion que calcula cuanto tiempo le queda
+            self.calcular_tiempo_de_vida(pac,self.hora_actual)#funcion que calcula cuanto tiempo le queda
             self.lista_no_urgentes.append(pac)
             self.ordenar_no_urgentes()
     def ordenar_no_urgentes(self): #como no son urgentes, los debo atender por tiempo de vida, pero deben ser ordenadoa por tiempo de vida
@@ -45,8 +46,8 @@ class cHospital:
         if cont == 0:#significa que todos los enfermeros estan ocupados, caso extremo
             print("Espere a ser atendido, todos nuestros enfermeros estan ocupados")
 
-    def Enf_actuales(self,hora_actual:datetime): #TESTING
-        momento_del_dia = self.momento_dia(hora_actual)  #funcion que devuelve, maniana,tarde,noche o madrugada
+    def Enf_actuales(self): #TESTING
+        momento_del_dia = self.momento_dia()  #funcion que devuelve, maniana,tarde,noche o madrugada
     
         cant=0
         
@@ -71,7 +72,7 @@ class cHospital:
                 raise Exception("No hay enfermeros en la lista")
             
 
-    def momento_dia(self,hora_actual:datetime)-> str:
+    def momento_dia(self)-> str:
        
 
         # Define los rangos de tiempo para cada turno
@@ -81,11 +82,11 @@ class cHospital:
         turno_noche = (datetime.strptime("16:00:00", "%H:%M:%S").time(), datetime.strptime("23:00:00", "%H:%M:%S").time())
 
         # Compara la hora actual con los rangos de tiempo y determina el turno
-        if turno_noche[0] <= hora_actual < turno_noche[1]:
+        if turno_noche[0] <= self.hora_actual < turno_noche[1]:
             turno = "Noche"
-        elif turno_maniana[0] <= hora_actual < turno_maniana[1]:
+        elif turno_maniana[0] <= self.hora_actual < turno_maniana[1]:
             turno = "Maniana"
-        elif turno_tarde[0] <= hora_actual < turno_tarde[1]:
+        elif turno_tarde[0] <= self.hora_actual < turno_tarde[1]:
             turno = "Tarde"
         else:
             turno = "Madrugada"
@@ -133,10 +134,10 @@ class cHospital:
 
         return paciente_mas_joven
 
-    def calcular_edad(self, fecha_nacimiento:datetime,hora_actual:datetime):
-        edad = hora_actual.year - fecha_nacimiento.year
-        if hora_actual.month < fecha_nacimiento.month or (
-                hora_actual.month == fecha_nacimiento.month and hora_actual.day < fecha_nacimiento.day):  # vemos la edad si aún no ha tenido su cumpleaños este año
+    def calcular_edad(self, fecha_nacimiento:datetime):
+        edad = self.hora_actual.year - fecha_nacimiento.year
+        if self.hora_actual.month < fecha_nacimiento.month or (
+                self.hora_actual.month == fecha_nacimiento.month and self.hora_actual.day < fecha_nacimiento.day):  # vemos la edad si aún no ha tenido su cumpleaños este año
             edad -= 1# le restamos uno si todavia no cumplio
         return edad
 
@@ -157,10 +158,10 @@ class cHospital:
 
         return empeoraron
 
-    def calcular_tiempo_de_vida(self, pac,hora_actual):
+    def calcular_tiempo_de_vida(self, pac):
         #hacer una funcion que me devuelva cunato tardo en atenderse cdependiendo su color
         #considero que tardo 15 minutos en atenderse
-        tiempo_que_paso_desde_que_llego = hora_actual - pac.hora_llegada
+        tiempo_que_paso_desde_que_llego = self.hora_actual - pac.hora_llegada
 
         if pac.gravedad == "naranja":
             pac.tiempo_de_vida = 30 - tiempo_que_paso_desde_que_llego.total_seconds() / 60  # lo paso a minutos ya que opero con minutos

@@ -5,17 +5,14 @@ from library.cHospital import cHospital
 from library.cEnfermero import cEnfermero
 from library.leer_archivos import readFileEnfermeros
 from library.leer_archivos import readFilePacientes
-from typing import List
 
-
-
+hora_actual = datetime(2023, 10, 24, 0, 0, 0, 0)
 
 def main() -> None:
-
-    Hospital = cHospital()
+    Hospital = cHospital(hora_actual)  # Pasa hora_actual como argumento
     lista = readFileEnfermeros(Hospital)
     lista2 = readFilePacientes(Hospital)
-    Hospital.Enf_actuales(hora_actual)
+    Hospital.Enf_actuales()  # No es necesario pasar hora_actual
     print(Hospital.lista_enfermerosDisp)
 
 
@@ -31,5 +28,4 @@ def main() -> None:
 if __name__ == "__main__":
   main()
 
-hora_actual = datetime(2023, 10, 24, 0, 0, 0, 0)
 

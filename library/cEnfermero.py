@@ -1,8 +1,7 @@
 
 from src.cPaciente import cPaciente
 from library.cHospital import cHospital
-from main import hora_actual  # Importa hora_actual desde main.py
-from typing import List
+
 class cEnfermero:
     def __init__(self, id: int, nombre:str, apellido:str):
         self.nombre = nombre
@@ -17,7 +16,7 @@ class cEnfermero:
         #entre los 3 sintomas que tiene el paciente tengo que ver el mas grave y en relacion a ese elijo el color
         color = self.colorSintomaGrave(paciente)
         paciente.color=color
-        Hospital.cargar_listas(paciente,hora_actual)
+        Hospital.cargar_listas(paciente)
     
     def colorSintomaGrave(paciente:cPaciente):
         listarojo={"paro_cardiaco","insuficiencia_respiratoria_grave","politraumatismo_grave"}
