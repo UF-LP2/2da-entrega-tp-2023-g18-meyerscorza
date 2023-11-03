@@ -1,21 +1,23 @@
+
 from src.cPaciente import cPaciente
 from library.cHospital import cHospital
+from main import hora_actual  # Importa hora_actual desde main.py
 from typing import List
 class cEnfermero:
-    def __init__(self,id:int,nombre:str,apellido:str):
-        self.nombre=nombre
+    def __init__(self, id: int, nombre:str, apellido:str):
+        self.nombre = nombre
         self.disponibilidad = True
-        self.id=id
-        self.apellido=apellido
+        self.id = id
+        self.apellido = apellido
     
-    def set_disponibilidad(self,a:bool):
-        self.disponibilidad=a
+    def set_disponibilidad(self, a: bool):
+        self.disponibilidad = a
  
-    def AsignoGravedadGreedy(self,paciente:cPaciente,Hospital:cHospital):
+    def AsignoGravedadGreedy(self,paciente:cPaciente, Hospital:cHospital):
         #entre los 3 sintomas que tiene el paciente tengo que ver el mas grave y en relacion a ese elijo el color
-        color=self.colorSintomaGrave(paciente)
+        color = self.colorSintomaGrave(paciente)
         paciente.color=color
-        Hospital.cargar_listas(paciente)
+        Hospital.cargar_listas(paciente,hora_actual)
     
     def colorSintomaGrave(paciente:cPaciente):
         listarojo={"paro_cardiaco","insuficiencia_respiratoria_grave","politraumatismo_grave"}

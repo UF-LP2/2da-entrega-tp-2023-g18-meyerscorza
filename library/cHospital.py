@@ -1,7 +1,6 @@
-from src.cPaciente import cPaciente
-from datetime import datetime # modulo de python para poder calcular lo hora actual
-import random
+from datetime import datetime
 from typing import List
+from main import hora_actual  # Importa hora_actual desde main.py
 class cHospital:
     def __init__(self):
         self.lista_urgentes = []          # Lista de pacientes urgentes (inicializo en vacío)
@@ -10,12 +9,12 @@ class cHospital:
         self.lista_enfermeros=[]            #utilizo para cuando leeo el archivo
         self.lista_pacientesTotales=[]      #utilizo para cuando leeo el archivo
 
-    def cargar_listas(self,pac:cPaciente,hora_actual):
+    def cargar_listas(self, pac: cPaciente, hora_actual:datetime):
         if pac.gravedad == "rojo":
-            pac.tiempo_de_vida=0
+            pac.tiempo_de_vida = 0
             self.lista_urgentes.append(pac)
         else:
-            pac.tiempo_de_vida=self.calcular_tiempo_de_vida(pac,hora_actual)#funcion que calcula cuanto tiempo le queda
+            self.calcular_tiempo_de_vida(pac,hora_actual)#funcion que calcula cuanto tiempo le queda
             self.lista_no_urgentes.append(pac)
             self.ordenar_no_urgentes()
     def ordenar_no_urgentes(self): #como no son urgentes, los debo atender por tiempo de vida, pero deben ser ordenadoa por tiempo de vida
@@ -134,11 +133,10 @@ class cHospital:
 
         return paciente_mas_joven
 
-    def calcular_edad(self, fecha_nacimiento):
-        hoy = datetime.now()
-        edad = hoy.year - fecha_nacimiento.year
-        if hoy.month < fecha_nacimiento.month or (
-                hoy.month == fecha_nacimiento.month and hoy.day < fecha_nacimiento.day):  # vemos la edad si aún no ha tenido su cumpleaños este año
+    def calcular_edad(self, fecha_nacimiento:datetime,hora_actual:datetime):
+        edad = hora_actual.year - fecha_nacimiento.year
+        if hora_actual.month < fecha_nacimiento.month or (
+                hora_actual.month == fecha_nacimiento.month and hora_actual.day < fecha_nacimiento.day):  # vemos la edad si aún no ha tenido su cumpleaños este año
             edad -= 1# le restamos uno si todavia no cumplio
         return edad
 
@@ -161,6 +159,7 @@ class cHospital:
 
     def calcular_tiempo_de_vida(self, pac,hora_actual):
         #hacer una funcion que me devuelva cunato tardo en atenderse cdependiendo su color
+        #considero que tardo 15 minutos en atenderse
         tiempo_que_paso_desde_que_llego = hora_actual - pac.hora_llegada
 
         if pac.gravedad == "naranja":

@@ -19,6 +19,6 @@ def readFilePacientes(Hospital:cHospital):
             reader = csv.reader(file)
             for i in reader:
                 Hospital.lista_pacientesTotales.append(i)
-        return Hospital.lista_pacientesTotales
+        return Hospital.lista_pacientesTotales# NO ES REAL ASI PERO HAY Q GUARDARLO
     except FileNotFoundError:  # utilizo excepcion que tiene Python para archivos no encontrados
         raise Exception("El archivo no se encuentra")
