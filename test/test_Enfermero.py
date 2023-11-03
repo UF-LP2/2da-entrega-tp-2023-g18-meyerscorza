@@ -1,11 +1,8 @@
 from library.cEnfermero import cEnfermero
 from src.cPaciente import cPaciente
 
-
-def test_Gravedad():
-    paciente = cPaciente(9,"25/08/2002","Martin","Scorza")
-    enfermero=cEnfermero(True,1,"meyer")
-    paciente.diagnostico=1
-    enfermero.asignar_gravedad(paciente)
-    # Verifica que el resultado esté en el rango esperado (0 a 20 según tu enum)
-    assert paciente.gravedad==1
+def test_colorXsintomas():
+    paciente=cPaciente(1,"2006-12-21 01:33:46","Marcos","Lopez","paro_cardiaco","otalgias","tos")
+    enfermero=cEnfermero(3,"Luis","Armada")
+    enfermero.colorSintomaGrave(paciente)
+    assert enfermero.colorSintomaGrave() == "rojo"
