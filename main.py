@@ -12,11 +12,12 @@ def main() -> None:
     Hospital = cHospital(hora_actual)  # Pasa hora_actual como argumento
     lista = readFileEnfermeros(Hospital)
     lista2 = readFilePacientes(Hospital)
-    Hospital.Enf_actuales()  # No es necesario pasar hora_actual
-    print(Hospital.lista_enfermerosDisp)
-
-
-
+   # while i<lista2:
+    Hospital.Enf_actuales()  # le da al hospital lista de los enfermeros de ese turno
+    Hospital.disp_enfermeros() # este ve cuales estan ocupados o no de de ese turno y atiendo en la entrada
+#        i=i+1
+    print(Hospital.lista_urgentes)
+    print(Hospital.lista_no_urgentes)
 #    for i in range(1, len(lista2)):
 
     #vemos los enfermeros_actuales()#veo q turno es

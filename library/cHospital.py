@@ -1,7 +1,7 @@
 import random
-from datetime import datetime
+from datetime import datetime,timedelta
 from src.cPaciente import cPaciente
-
+from library.cEnfermero import cEnfermero
 class cHospital:
     def __init__(self, hora_actual: datetime):
         self.lista_urgentes = []          # Lista de pacientes urgentes (inicializo en vacío)
@@ -10,12 +10,14 @@ class cHospital:
         self.lista_enfermeros=[]            #utilizo para cuando leeo el archivo
         self.lista_pacientesTotales=[]      #utilizo para cuando leeo el archivo
         self.hora_actual = hora_actual  # Almacena la hora_actual como atributo
+        self.turno="madrugada"
+        self.cont=0
     def cargar_listas(self, pac:cPaciente):
         if pac.gravedad == "rojo":
             pac.tiempo_de_vida = 0
             self.lista_urgentes.append(pac)
         else:
-            self.calcular_tiempo_de_vida(pac,self.hora_actual)#funcion que calcula cuanto tiempo le queda
+            self.calcular_tiempo_de_vida(pac)#funcion que calcula cuanto tiempo le queda
             self.lista_no_urgentes.append(pac)
             self.ordenar_no_urgentes()
     def ordenar_no_urgentes(self): #como no son urgentes, los debo atender por tiempo de vida, pero deben ser ordenadoa por tiempo de vida
@@ -28,37 +30,39 @@ class cHospital:
                 j = j - 1
                 self.lista_no_urgentes[j + 1] = key
 
+    def Recorrer_pacientes(self)-> cPaciente:
+        self.cont=self.cont+1
+        return self.lista_pacientesTotales[self.cont]
+
     def disp_enfermeros(self):
         i=0
         cont= 0
-        lista_enfermeros_actuales=self.Enf_actuales()#tengo lista de los enfermeros disponibles
-        while i< len(lista_enfermeros_actuales):#recorro la nueva lista
-            if  (lista_enfermeros_actuales[i].disponibilidad==True): #si esta libre
-                pac=self.seleccion_pacientes()#atiende pac, elije por gryddy o por programacion dinamica
-                self.setear_disponibilidad(lista_enfermeros_actuales[i],False)#ahora esta ocupado
-                self.asignacion_paciente(pac, lista_enfermeros_actuales[i])#pongo como atributo de enfermero el paciente
-                #PONER FUNCION TIEMPO DE ATENCION
-                #ahora terminaria la consulta
-                self.eliminar_pac(pac)#funcion que elimina el paciente de su respectiva lista
-                #self. setear_disponibilidad(lista_enfermeros_actuales[i], True) #esto esta en enfermeros
+        while i < len(self.lista_enfermerosDisp):#recorro la nueva lista
+            if  ( self.lista_enfermerosDisp[i].disponibilidad == True): #si esta libre
+                self.lista_enfermerosDisp[i].setear_disponibilidad(False)  # ahora esta ocupado
+                pac=self.Recorrer_pacientes()
+                self.lista_enfermerosDisp[i].AsignacionGravedadGreedy(pac)
+                pac.hora_de_llegada=self.hora_actual
+                self.cargar_listas(pac)# LLAMAR A CARGAR LISTA PROGRMACION DINAMICA
+                self.lista_enfermerosDisp[i].setear_disponibilidad(True)  # ahora esta desocupado
                 cont += 1
             i+=1
         if cont == 0:#significa que todos los enfermeros estan ocupados, caso extremo
             print("Espere a ser atendido, todos nuestros enfermeros estan ocupados")
 
-    def Enf_actuales(self): #TESTING
+    def Enf_actuales(self): #FUNCIONA
         momento_del_dia = self.momento_dia()  #funcion que devuelve, maniana,tarde,noche o madrugada
     
         cant=0
         
         if momento_del_dia =="Madrugada": #elijo solo a 1 
-            cant=1
+            cant = 1
         elif momento_del_dia=="Maniana": #elijo a 2
-            cant=2
+            cant = 2
         elif momento_del_dia=="Tarde": #elijo a 5
-            cant=5
+            cant = 5
         elif momento_del_dia=="Noche": #elijo a 3
-            cant=3
+            cant = 3
         else:
             raise ValueError("Momento del día no válido")
         i=0
@@ -72,8 +76,8 @@ class cHospital:
                 raise Exception("No hay enfermeros en la lista")
             
 
-    def momento_dia(self)-> str:
-       
+    def momento_dia(self)-> str:#FUNCIONA
+
 
         # Define los rangos de tiempo para cada turno
         turno_madrugada= (datetime.strptime("23:00:00", "%H:%M:%S").time(), datetime.strptime("06:00:00", "%H:%M:%S").time())
@@ -82,11 +86,11 @@ class cHospital:
         turno_noche = (datetime.strptime("16:00:00", "%H:%M:%S").time(), datetime.strptime("23:00:00", "%H:%M:%S").time())
 
         # Compara la hora actual con los rangos de tiempo y determina el turno
-        if turno_noche[0] <= self.hora_actual < turno_noche[1]:
+        if turno_noche[0] <= self.hora_actual.time() < turno_noche[1]:# datetime.time es solo hora
             turno = "Noche"
-        elif turno_maniana[0] <= self.hora_actual < turno_maniana[1]:
+        elif turno_maniana[0] <= self.hora_actual.time() < turno_maniana[1]:
             turno = "Maniana"
-        elif turno_tarde[0] <= self.hora_actual < turno_tarde[1]:
+        elif turno_tarde[0] <= self.hora_actual.time() < turno_tarde[1]:
             turno = "Tarde"
         else:
             turno = "Madrugada"
@@ -160,7 +164,8 @@ class cHospital:
 
     def calcular_tiempo_de_vida(self, pac):
         #hacer una funcion que me devuelva cunato tardo en atenderse cdependiendo su color
-        #considero que tardo 15 minutos en atenderse
+        #considero que tardo 10 minutos en atenderse
+        self.hora_actual = self.hora_actual + timedelta(minutes=10)
         tiempo_que_paso_desde_que_llego = self.hora_actual - pac.hora_llegada
 
         if pac.gravedad == "naranja":
@@ -171,7 +176,7 @@ class cHospital:
             pac.tiempo_de_vida = 120 - tiempo_que_paso_desde_que_llego.total_seconds() / 60
         elif pac.gravedad == "azul":
             pac.tiempo_de_vida = 240 - tiempo_que_paso_desde_que_llego.total_seconds() / 60
-    
+
 
    
 '''

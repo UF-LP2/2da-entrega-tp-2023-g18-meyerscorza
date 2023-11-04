@@ -1,6 +1,5 @@
 
 from src.cPaciente import cPaciente
-from library.cHospital import cHospital
 
 class cEnfermero:
     def __init__(self, id: int, nombre:str, apellido:str):
@@ -12,12 +11,10 @@ class cEnfermero:
     def set_disponibilidad(self, a: bool):
         self.disponibilidad = a
  
-    def AsignoGravedadGreedy(self,paciente:cPaciente, Hospital:cHospital):
+    def AsignoGravedadGreedy(self,paciente:cPaciente):
         #entre los 3 sintomas que tiene el paciente tengo que ver el mas grave y en relacion a ese elijo el color
         color = self.colorSintomaGrave(paciente)
         paciente.color=color
-        Hospital.cargar_listas(paciente)
-    
     def colorSintomaGrave(paciente:cPaciente):
         listarojo={"paro_cardiaco","insuficiencia_respiratoria_grave","politraumatismo_grave"}
         listanaranja={"coma","convulsiones","hemorragia_digestiva","isquemia"}
