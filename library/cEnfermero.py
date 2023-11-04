@@ -2,15 +2,18 @@
 from src.cPaciente import cPaciente
 
 class cEnfermero:
-    def __init__(self, id: int, nombre:str, apellido:str):
+    def __init__(self, id: int, nombre:str, apellido:str,disp:bool):
         self.nombre = nombre
-        self.disponibilidad = True
+        self.disponibilidad=disp
         self.id = id
         self.apellido = apellido
     
     def set_disponibilidad(self, a: bool):
         self.disponibilidad = a
- 
+
+    def getDisp(self):
+        return self.disponibilidad
+    
     def AsignoGravedadGreedy(self,paciente:cPaciente):
         #entre los 3 sintomas que tiene el paciente tengo que ver el mas grave y en relacion a ese elijo el color
         color = self.colorSintomaGrave(paciente)

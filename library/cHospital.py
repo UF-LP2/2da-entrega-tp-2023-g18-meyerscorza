@@ -9,9 +9,11 @@ class cHospital:
         self.lista_enfermerosDisp = []     # Lista de enfermeros disponibles (inicializo en vacío)
         self.lista_enfermeros=[]            #utilizo para cuando leeo el archivo
         self.lista_pacientesTotales=[]      #utilizo para cuando leeo el archivo
+        self.listaPD=[]    #para programacion dinamica
         self.hora_actual = hora_actual  # Almacena la hora_actual como atributo
         self.turno="madrugada"
-        self.cont=0
+        self.cont=1 #contador para ir ingresando pacientes, inicializo en 1 porque nos estabamos comiendo el encabezado
+
     def cargar_listas(self, pac:cPaciente):
         if pac.gravedad == "rojo":
             pac.tiempo_de_vida = 0
@@ -20,6 +22,7 @@ class cHospital:
             self.calcular_tiempo_de_vida(pac)#funcion que calcula cuanto tiempo le queda
             self.lista_no_urgentes.append(pac)
             self.ordenar_no_urgentes()
+
     def ordenar_no_urgentes(self): #como no son urgentes, los debo atender por tiempo de vida, pero deben ser ordenadoa por tiempo de vida
         for i in range(1, len(self.lista_no_urgentes)):
             key = self.lista_no_urgentes[i]
@@ -36,19 +39,19 @@ class cHospital:
 
     def disp_enfermeros(self):
         i=0
-        cont= 0
         while i < len(self.lista_enfermerosDisp):#recorro la nueva lista
-            if  ( self.lista_enfermerosDisp[i].disponibilidad == True): #si esta libre
+            if  (self.lista_enfermerosDisp[i].getDisp() == "true"): #si esta libre
                 self.lista_enfermerosDisp[i].setear_disponibilidad(False)  # ahora esta ocupado
                 pac=self.Recorrer_pacientes()
                 self.lista_enfermerosDisp[i].AsignacionGravedadGreedy(pac)
                 pac.hora_de_llegada=self.hora_actual
-                self.cargar_listas(pac)# LLAMAR A CARGAR LISTA PROGRMACION DINAMICA
+                self.cargar_listas(pac)
+                self.cargado_lista_paraPD(pac)
                 self.lista_enfermerosDisp[i].setear_disponibilidad(True)  # ahora esta desocupado
-                cont += 1
+
+            else:#significa que todos los enfermeros estan ocupados, caso extremo
+                print("Espere a ser atendido, todos nuestros enfermeros estan ocupados")
             i+=1
-        if cont == 0:#significa que todos los enfermeros estan ocupados, caso extremo
-            print("Espere a ser atendido, todos nuestros enfermeros estan ocupados")
 
     def Enf_actuales(self): #FUNCIONA
         momento_del_dia = self.momento_dia()  #funcion que devuelve, maniana,tarde,noche o madrugada
@@ -178,12 +181,14 @@ class cHospital:
             pac.tiempo_de_vida = 240 - tiempo_que_paso_desde_que_llego.total_seconds() / 60
 
 
-   
-'''
+    def cargado_lista_paraPD(self,paciente:cPaciente): 
+        self.listaPD.append(paciente)
+        self.calcular_tiempo_de_vida(paciente)
 
+   
     ##ALGORITMO PROG DINAMICA
-    def SeleccionProgDinamica(cantEnfer,beneficio,Npacientes,pacientes):
-         # Crear una matriz K de (Npacientes + 1) x (cantEnfer + 1) inicializada con ceros
+    def SeleccionProgDinamica(self, cantEnfer:int, Npacientes:int, pacientes:list):
+        # Crear una matriz K de (Npacientes + 1) x (cantEnfer + 1) inicializada con ceros
         K = [[0 for x in range(cantEnfer + 1)] for x in range(Npacientes + 1)]
 
         # Construir la matriz de manera ascendente
@@ -191,14 +196,17 @@ class cHospital:
             for w in range(cantEnfer + 1):  # Recorrer columnas
                 if i == 0 or w == 0:
                     K[i][w] = 0
-                elif pacientes[i - 1] <= w:
-                    K[i][w] = min(beneficio[i - 1] + K[i - 1][w - pacientes[i - 1]], K[i - 1][w])
-                    #minimizo incluyendo a ese paciente y no incluyendolo,seria el de menor tiempo de espera
-                else: #no tengo suficientes enfermeros para hacer atendido ahora
-                    #no lo incluyo
+                elif pacientes[i - 1].tiempo_de_vida <= w:
+                    beneficio = pacientes[i - 1].tiempo_de_vida
+                    K[i][w] = min(beneficio + K[i - 1][w - pacientes[i - 1].tiempo_de_vida], K[i - 1][w])
+                else:
                     K[i][w] = K[i - 1][w]
 
-        return K  # Devolver la matriz K '''
+        return K  # Devolver la matriz K
+
+
+ #-------------------------------------------------------------------------------------
+
 
 
 
