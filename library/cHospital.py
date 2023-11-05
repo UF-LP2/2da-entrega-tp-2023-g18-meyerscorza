@@ -47,7 +47,7 @@ class cHospital:
                 pac.hora_de_llegada=self.hora_actual
                 self.cargar_listas(pac)
                 self.cargado_lista_paraPD(pac)
-                self.lista_enfermerosDisp[i].setear_disponibilidad()  # ahora esta desocupado
+                self.lista_enfermerosDisp[i].set_disponibilidad()  # ahora esta desocupado
 
             else:#significa que todos los enfermeros estan ocupados, caso extremo
                 print("Espere a ser atendido, todos nuestros enfermeros estan ocupados")
@@ -156,20 +156,46 @@ class cHospital:
         empeoraron = []
         for i in range(len(self.lista_no_urgentes)):
             prob_que_empeoro = 0  # Inicializamos la variable
-            if self.lista_no_urgentes[i].gravedad == "amarillo":
-                prob_que_empeoro = random.randint(1, 6)
-            elif self.lista_no_urgentes[i].gravedad == "verde":
-                prob_que_empeoro = random.randint(1, 10)
-            elif self.lista_no_urgentes[i].gravedad == "azul":
-                prob_que_empeoro = random.randint(1, 18)
 
-            if prob_que_empeoro == 1:
-                self.lista_no_urgentes[i].gravedad = "rojo"
-                empeoraron.append(self.lista_no_urgentes[i])
+            if self.lista_no_urgentes[i].gravedad == "naranja":
+                prob_que_empeoro = random.randint(1, 4)
+                if prob_que_empeoro == 1:
+                    self.lista_no_urgentes[i].gravedad = "rojo"
+                    self.lista_no_urgentes[i].tiempo_de_vida = 0
+                    empeoraron.append(self.lista_no_urgentes[i])
+
+            elif self.lista_no_urgentes[i].gravedad == "amarillo":
+                prob_que_empeoro = random.randint(1, 100)
+                if prob_que_empeoro == 1:
+                    self.lista_no_urgentes[i].gravedad = "rojo"
+                    self.lista_no_urgentes[i].tiempo_de_vida = 0
+                    empeoraron.append(self.lista_no_urgentes[i])
+                elif prob_que_empeoro == 2 or prob_que_empeoro == 3:
+                    self.lista_no_urgentes[i].gravedad = "naranja"
+                    self.calcular_tiempo_de_vida(self.lista_no_urgentes[i])
+
+            elif self.lista_no_urgentes[i].gravedad == "verde":
+                prob_que_empeoro = random.randint(1, 100000)
+                if prob_que_empeoro == 1:
+                    self.lista_no_urgentes[i].gravedad = "rojo"
+                    self.lista_no_urgentes[i].tiempo_de_vida = 0
+                    empeoraron.append(self.lista_no_urgentes[i])
+                elif prob_que_empeoro == 2 or prob_que_empeoro == 30:
+                    self.lista_no_urgentes[i].gravedad = "amarillo"
+                    self.calcular_tiempo_de_vida(self.lista_no_urgentes[i])
+            elif self.lista_no_urgentes[i].gravedad == "azul":
+                prob_que_empeoro = random.randint(1, 18000000)
+                if prob_que_empeoro == 1:
+                    self.lista_no_urgentes[i].gravedad = "rojo"
+                    self.lista_no_urgentes[i].tiempo_de_vida = 0
+                    empeoraron.append(self.lista_no_urgentes[i])
+                elif prob_que_empeoro > 20 or prob_que_empeoro < 50:
+                    self.lista_no_urgentes[i].gravedad = "amarillo"
+                    self.calcular_tiempo_de_vida(self.lista_no_urgentes[i])
 
         return empeoraron
 
-    def calcular_tiempo_de_vida(self, pac):
+    def calcular_tiempo_de_vida(self, pac):#FUNCIONA
         #hacer una funcion que me devuelva cunato tardo en atenderse cdependiendo su color
         #considero que tardo 10 minutos en atenderse
         self.hora_actual = self.hora_actual + timedelta(minutes=5)

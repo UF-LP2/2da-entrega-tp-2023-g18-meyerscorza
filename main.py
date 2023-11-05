@@ -3,6 +3,7 @@ from datetime import datetime
 from src.cPaciente import cPaciente
 from library.cHospital import cHospital
 from library.cEnfermero import cEnfermero
+from library.cMedico import cMedico
 from library.leer_archivos import readFileEnfermeros
 from library.leer_archivos import readFilePacientes
 
@@ -17,8 +18,11 @@ def main() -> None:
    # while i<lista2:
     Hospital.Enf_actuales()  # le da al hospital lista de los enfermeros de ese turno
     Hospital.disp_enfermeros() # este ve cuales estan ocupados o no de de ese turno y atiendo en la entrada
-    Hospital.SeleccionGreedy()      
-    # i=i+1
+    Medico = cMedico(56)
+    Medico.Atender_Paciente(Hospital.SeleccionGreedy())
+
+
+       # i=i+1
     
 
 
