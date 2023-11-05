@@ -14,7 +14,7 @@ class cHospital:
         self.turno="madrugada"
         self.cont=1 #contador para ir ingresando pacientes, inicializo en 1 porque nos estabamos comiendo el encabezado
 
-    def cargar_listas(self, pac:cPaciente):
+    def cargar_listas(self, pac:cPaciente):#FUNCIONAAA
         if pac.gravedad == "rojo":
             pac.tiempo_de_vida = 0
             self.lista_urgentes.append(pac)
@@ -33,21 +33,21 @@ class cHospital:
                 j = j - 1
                 self.lista_no_urgentes[j + 1] = key
 
-    def Recorrer_pacientes(self)-> cPaciente:
+    def Recorrer_pacientes(self)-> cPaciente: #FUNCIONAAA
         self.cont=self.cont+1
         return self.lista_pacientesTotales[self.cont]
 
-    def disp_enfermeros(self):
+    def disp_enfermeros(self): #FUNCIONA
         i=0
         while i < len(self.lista_enfermerosDisp):#recorro la nueva lista
-            if  (self.lista_enfermerosDisp[i].getDisp() == "true"): #si esta libre
-                self.lista_enfermerosDisp[i].setear_disponibilidad(False)  # ahora esta ocupado
+            if  (self.lista_enfermerosDisp[i].getDisp() == True): #si esta libre
+                self.lista_enfermerosDisp[i].set_disponibilidad()  # ahora esta ocupado
                 pac=self.Recorrer_pacientes()
-                self.lista_enfermerosDisp[i].AsignacionGravedadGreedy(pac)
+                self.lista_enfermerosDisp[i].AsignoGravedadGreedy(pac)
                 pac.hora_de_llegada=self.hora_actual
                 self.cargar_listas(pac)
                 self.cargado_lista_paraPD(pac)
-                self.lista_enfermerosDisp[i].setear_disponibilidad(True)  # ahora esta desocupado
+                self.lista_enfermerosDisp[i].setear_disponibilidad()  # ahora esta desocupado
 
             else:#significa que todos los enfermeros estan ocupados, caso extremo
                 print("Espere a ser atendido, todos nuestros enfermeros estan ocupados")
@@ -112,6 +112,7 @@ class cHospital:
             self.lista_no_urgentes.remove(pac)
             if pac in self.listaPD:
                 self.listaPD.remove(pac)
+                
     #ALGORITMO DE GREEDY
     def SeleccionGreedy(self):
         # las lista_no_urgente está ordenada por el tiempo que le queda de vida a los pacientes
@@ -171,8 +172,8 @@ class cHospital:
     def calcular_tiempo_de_vida(self, pac):
         #hacer una funcion que me devuelva cunato tardo en atenderse cdependiendo su color
         #considero que tardo 10 minutos en atenderse
-        self.hora_actual = self.hora_actual + timedelta(minutes=10)
-        tiempo_que_paso_desde_que_llego = self.hora_actual - pac.hora_llegada
+        self.hora_actual = self.hora_actual + timedelta(minutes=5)
+        tiempo_que_paso_desde_que_llego = self.hora_actual - pac.hora_de_llegada
 
         if pac.gravedad == "naranja":
             pac.tiempo_de_vida = 30 - tiempo_que_paso_desde_que_llego.total_seconds() / 60  # lo paso a minutos ya que opero con minutos
@@ -186,9 +187,7 @@ class cHospital:
 
     def cargado_lista_paraPD(self,paciente:cPaciente): 
         self.listaPD.append(paciente)
-        self.calcular_tiempo_de_vida(paciente)
 
-   
     ##ALGORITMO PROG DINAMICA
     def SeleccionProgDinamica(self, cantEnfer:int, Npacientes:int, pacientes:list):
         # Crear una matriz K de (Npacientes + 1) x (cantEnfer + 1) inicializada con ceros

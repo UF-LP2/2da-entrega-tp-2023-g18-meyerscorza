@@ -8,8 +8,11 @@ class cEnfermero:
         self.id = id
         self.apellido = apellido
     
-    def set_disponibilidad(self, a: bool):
-        self.disponibilidad = a
+    def set_disponibilidad(self):
+        if(self.disponibilidad==True):
+            self.disponibilidad = False
+        else:
+            self.disponibilidad = True
 
     def getDisp(self):
         return self.disponibilidad
@@ -17,8 +20,9 @@ class cEnfermero:
     def AsignoGravedadGreedy(self,paciente:cPaciente):
         #entre los 3 sintomas que tiene el paciente tengo que ver el mas grave y en relacion a ese elijo el color
         color = self.colorSintomaGrave(paciente)
-        paciente.color=color
-    def colorSintomaGrave(paciente:cPaciente):
+        paciente.gravedad=color
+
+    def colorSintomaGrave(self,paciente:cPaciente):
         listarojo={"paro_cardiaco","insuficiencia_respiratoria_grave","politraumatismo_grave"}
         listanaranja={"coma","convulsiones","hemorragia_digestiva","isquemia"}
         listaamarillo={"cefalea_brusca","paresia","hipertensión_arterial","vertigo_con_afectación_vegetativa","sincope","urgencias_psiquiatricas"}

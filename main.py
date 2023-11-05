@@ -10,17 +10,21 @@ hora_actual = datetime(2023, 10, 24, 0, 0, 0, 0)
 
 def main() -> None:
     Hospital = cHospital(hora_actual)  # Pasa hora_actual como argumento
-    readFilePacientes(Hospital)
+    lista2=readFilePacientes(Hospital)
     readFileEnfermeros(Hospital)
     
     
    # while i<lista2:
     Hospital.Enf_actuales()  # le da al hospital lista de los enfermeros de ese turno
-    print (Hospital.lista_enfermerosDisp)
     Hospital.disp_enfermeros() # este ve cuales estan ocupados o no de de ese turno y atiendo en la entrada
-#        i=i+1
-    print(Hospital.lista_urgentes)
-    print(Hospital.lista_no_urgentes)
+    Hospital.SeleccionGreedy()      
+    # i=i+1
+    
+
+
+
+
+
 #    for i in range(1, len(lista2)):
 
     #vemos los enfermeros_actuales()#veo q turno es
