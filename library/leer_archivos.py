@@ -34,7 +34,7 @@ def readFilePacientes(Hospital:cHospital):
                 sin2 = row[5] 
                 sin3 = row[6] 
                 paciente = cPaciente(id, nacimiento, nombre, apellido, sin1, sin2, sin3)
-                Hospital.lista_pacientesTotales.append(i)
+                Hospital.lista_pacientesTotales.append(paciente)
         return Hospital.lista_pacientesTotales# NO ES REAL ASI PERO HAY Q GUARDARLO
     except FileNotFoundError:  # utilizo excepcion que tiene Python para archivos no encontrados
         raise Exception("El archivo no se encuentra")

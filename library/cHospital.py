@@ -106,9 +106,12 @@ class cHospital:
         #no se en cual de las dos de las lista esta, entocnes ponemos esas condiciones
         if pac in self.lista_urgentes:
             self.lista_urgentes.remove(pac)
+            if pac in self.listaPD:
+                self.listaPD.remove(pac)
         else:
             self.lista_no_urgentes.remove(pac)
-    
+            if pac in self.listaPD:
+                self.listaPD.remove(pac)
     #ALGORITMO DE GREEDY
     def SeleccionGreedy(self):
         # las lista_no_urgente está ordenada por el tiempo que le queda de vida a los pacientes
