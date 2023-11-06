@@ -14,13 +14,21 @@ def main() -> None:
     lista2=readFilePacientes(Hospital)
     readFileEnfermeros(Hospital)
     
-    
-   # while i<lista2:
+    i=0
+
+   #while i<lista2:
     Hospital.Enf_actuales()  # le da al hospital lista de los enfermeros de ese turno
     Hospital.disp_enfermeros() # este ve cuales estan ocupados o no de de ese turno y atiendo en la entrada
     Medico = cMedico(56)
-    Medico.Atender_Paciente(Hospital.SeleccionGreedy())
+    tamEnf = len(Hospital.lista_enfermerosDisp)
+    tamPac = len(Hospital.listaPD)
+    resultado = Hospital.SeleccionProgDinamica(tamEnf, tamPac, Hospital.listaPD)
+    print(resultado)
+    pac=Hospital.SeleccionGreedy()
+    a=Medico.Atender_Paciente(pac)
 
+    if a==True: #lo pudo atender
+        Hospital.eliminar_pac(pac)
 
        # i=i+1
     

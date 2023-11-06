@@ -12,7 +12,7 @@ class cHospital:
         self.listaPD=[]    #para programacion dinamica
         self.hora_actual = hora_actual  # Almacena la hora_actual como atributo
         self.turno="madrugada"
-        self.cont=1 #contador para ir ingresando pacientes, inicializo en 1 porque nos estabamos comiendo el encabezado
+        self.cont=5 #contador para ir ingresando pacientes
 
     def cargar_listas(self, pac:cPaciente):#FUNCIONAAA
         if pac.gravedad == "rojo":
@@ -138,7 +138,8 @@ class cHospital:
         edad_mas_joven = float('4345')# inicializo edad para poder devolver la mínima
 
         for i in range(len(empeoraron)):
-            edad_paciente = self.calcular_edad(empeoraron[i].nacimiento)
+            paciente=empeoraron[i]
+            edad_paciente = self.calcular_edad(paciente.getnacimiento())
             if edad_paciente < edad_mas_joven:# comparo si la edad que entra es menor a la anterior
                 edad_mas_joven = edad_paciente
                 paciente_mas_joven = empeoraron[i]
@@ -146,7 +147,9 @@ class cHospital:
         return paciente_mas_joven
 
     def calcular_edad(self, fecha_nacimiento:datetime):
-        edad = self.hora_actual.year - fecha_nacimiento.year
+        fecha_nacimiento = datetime.strptime(fecha_nacimiento, "%Y-%m-%d %H:%M:%S")
+        anionacimiento=fecha_nacimiento.year
+        edad = self.hora_actual.year - anionacimiento
         if self.hora_actual.month < fecha_nacimiento.month or (
                 self.hora_actual.month == fecha_nacimiento.month and self.hora_actual.day < fecha_nacimiento.day):  # vemos la edad si aún no ha tenido su cumpleaños este año
             edad -= 1# le restamos uno si todavia no cumplio
@@ -196,8 +199,8 @@ class cHospital:
         return empeoraron
 
     def calcular_tiempo_de_vida(self, pac):#FUNCIONA
-        #hacer una funcion que me devuelva cunato tardo en atenderse cdependiendo su color
-        #considero que tardo 10 minutos en atenderse
+        self.bajar_tiempo_vida()
+        #considero que tardo 5 minutos en atenderse
         self.hora_actual = self.hora_actual + timedelta(minutes=5)
         tiempo_que_paso_desde_que_llego = self.hora_actual - pac.hora_de_llegada
 
@@ -210,12 +213,26 @@ class cHospital:
         elif pac.gravedad == "azul":
             pac.tiempo_de_vida = 240 - tiempo_que_paso_desde_que_llego.total_seconds() / 60
 
+    def bajar_tiempo_vida(self):
+        #recorro todas las listas y le decremento a tdos el tiempo
+        #menos los urgentes, son los proximos en antenderse
+        for i in range (len(self.lista_no_urgentes)):
+            pac=self.lista_no_urgentes[i]
+            pac.tiempo_de_vida=pac.tiempo_de_vida - timedelta(minutes=5)
+            if pac.tiempo_de_vida<=5:
+                self.lista_urgentes.append(pac) #lo paso a urgentess si le queda poco tiempo de vida
+
+        for i in range (len(self.listaPD)):
+            pac=self.listaPD[i]
+            if not (pac.gravedad == "rojo"):
+                pac.tiempo_de_vida=pac.tiempo_de_vida - timedelta(minutes=5)    
+
 
     def cargado_lista_paraPD(self,paciente:cPaciente): 
         self.listaPD.append(paciente)
 
     ##ALGORITMO PROG DINAMICA
-    def SeleccionProgDinamica(self, cantEnfer:int, Npacientes:int, pacientes:list):
+    def SeleccionProgDinamica(self, cantEnfer: int, Npacientes: int, pacientes: list):
         # Crear una matriz K de (Npacientes + 1) x (cantEnfer + 1) inicializada con ceros
         K = [[0 for x in range(cantEnfer + 1)] for x in range(Npacientes + 1)]
 
@@ -224,13 +241,21 @@ class cHospital:
             for w in range(cantEnfer + 1):  # Recorrer columnas
                 if i == 0 or w == 0:
                     K[i][w] = 0
+
                 elif pacientes[i - 1].tiempo_de_vida <= w:
                     beneficio = pacientes[i - 1].tiempo_de_vida
-                    K[i][w] = min(beneficio + K[i - 1][w - pacientes[i - 1].tiempo_de_vida], K[i - 1][w])
+                    opcion_con_paciente = pacientes[i - 1]  # Almacenar una referencia al paciente
+                    otra_opcion = K[i - 1][w - pacientes[i - 1].tiempo_de_vida]
+
+                    if beneficio + otra_opcion > otra_opcion:
+                        K[i][w] = opcion_con_paciente
+                    else:
+                        K[i][w] = otra_opcion
+            
                 else:
                     K[i][w] = K[i - 1][w]
 
-        return K  # Devolver la matriz K
+        return K[Npacientes][cantEnfer]
 
 
  #-------------------------------------------------------------------------------------
