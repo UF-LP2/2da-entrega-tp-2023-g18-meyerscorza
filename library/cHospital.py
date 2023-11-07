@@ -56,8 +56,7 @@ class cHospital:
                     self.cargar_listas(pac)
                     self.cargado_lista_paraPD(pac)
                     self.lista_enfermerosDisp[i].set_disponibilidad()  # ahora esta desocupado
-                else:
-                    print("No hay mas pacientes, hipp hip urra")
+                
             i+=1
 
     def Enf_actuales(self): #FUNCIONA
@@ -265,8 +264,66 @@ class cHospital:
 
 
     def SeleccionProgDinamica(self, cantEnfer: int, Npacientes: int, pacientes: list):
+    # Crear una matriz K de (Npacientes + 1) x (cantEnfer + 1) inicializada con cPaciente nulo
+        K = [[cPaciente(None, None, None, None, None, None, None) for _ in range(cantEnfer + 1)] for _ in range(Npacientes + 1)]
+
+    # Crear una matriz para registrar los IDs de los pacientes que se atenderán
+        pacientes_a_atender = [[0 for _ in range(cantEnfer + 1)] for _ in range(Npacientes + 1)]
+
+    # Construir la matriz de manera ascendente
+        for i in range(Npacientes + 1):  # Recorrer filas
+            for w in range(cantEnfer + 1):  # Recorrer columnas
+                if i == 0 or w == 0:
+                    K[i][w] = cPaciente(None, None, None, None, None, None, None)
+                else:
+                    if (i - 1) > 0:
+                        beneficio = pacientes[i - 1].tiempo_de_vida
+                        paciente_q_viene = pacientes[i - 1]
+                        if (w - int(pacientes[i - 1].tiempo_de_vida)) >= 0:
+                            paciente_q_ya_esta = K[i - 1][w - int(pacientes[i - 1].tiempo_de_vida)]
+                        else:
+                            paciente_q_ya_esta = K[i - 1][w]
+
+                        if beneficio > paciente_q_ya_esta.tiempo_de_vida:
+                            K[i][w] = paciente_q_ya_esta
+                            pacientes_a_atender[i][w] = paciente_q_ya_esta.idPaciente
+                        elif beneficio == paciente_q_ya_esta.tiempo_de_vida:
+                            pac = self.dar_prioridadPD(paciente_q_viene, paciente_q_ya_esta)
+                            K[i][w] = pac
+                            pacientes_a_atender[i][w] = pac.idPaciente
+                        else:
+                            K[i][w] = paciente_q_viene
+                            pacientes_a_atender[i][w] = paciente_q_viene.idPaciente
+                    else:
+                        paciente_q_viene = pacientes[i - 1] 
+                        K[i][w] = paciente_q_viene
+                        pacientes_a_atender[i][w] = paciente_q_viene.idPaciente
+
+    # Obtener la matriz de pacientes a atender para el caso óptimo
+        pacientes_a_atender_optimos = pacientes_a_atender[Npacientes][cantEnfer]
+
+        return pacientes_a_atender_optimos
+
+    def dar_prioridadPD(self, pacienteViene, pacienteYaEsta):
+        edad_pacienteViene = self.calcular_edad(pacienteViene.getnacimiento())
+        edad_pacienteEsta = self.calcular_edad(pacienteYaEsta.getnacimiento())
+
+        if edad_pacienteViene < edad_pacienteEsta:
+            return pacienteViene
+        else:
+            return pacienteYaEsta
+        
+    def buscadorPaciente(self,resultado) ->cPaciente:
+        tam=len(self.listaPD)
+        for i in range (tam):
+            if self.listaPD[i].idPaciente == resultado:
+                return self.listaPD[i] #retorno al paciente q tiene que ser atendido
+    
+    
+    
+"""def SeleccionProgDinamica(self, cantEnfer: int, Npacientes: int, pacientes: list):
         # Crear una matriz K de (Npacientes + 1) x (cantEnfer + 1) inicializada con ceros
-        K = [[0 for x in range(cantEnfer + 1)] for x in range(Npacientes + 1)]
+        K = [[None for x in range(cantEnfer + 1)] for x in range(Npacientes + 1)]
 
         # Crear una matriz para registrar los IDs de los pacientes que se atenderán
         pacientes_a_atender = [[0 for x in range(cantEnfer + 1)] for x in range(Npacientes + 1)]
@@ -275,7 +332,7 @@ class cHospital:
         for i in range(Npacientes + 1):  # Recorrer filas
             for w in range(cantEnfer + 1):  # Recorrer columnas
                 if i == 0 or w == 0:
-                    K[i][w] = 0
+                    K[i][w] = None
 
                 else:
                     if (i-1)>0: #no soy el unico paciente
@@ -309,17 +366,4 @@ class cHospital:
         return pacientes_a_atender_optimos
 
 
-    def dar_prioridadPD(self,pacienteViene,pacienteYaEsta):
-        edad_pacienteViene = self.calcular_edad(pacienteViene.getnacimiento())
-        edad_pacienteEsta = self.calcular_edad(pacienteYaEsta.getnacimiento())
-
-        if edad_pacienteViene < edad_pacienteEsta:# comparo si la edad que entra es menor a la anterior
-            return pacienteViene
-        else:
-            return pacienteYaEsta
-
-    def buscadorPaciente(self,resultado):
-        tam=len(self.listaPD)
-        for i in range (tam):
-            if self.listaPD[i].idPaciente == resultado:
-                return self.listaPD[i] #retorno al paciente q tiene que ser atendido
+    """
