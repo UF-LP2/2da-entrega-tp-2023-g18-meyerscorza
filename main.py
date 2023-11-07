@@ -11,41 +11,35 @@ hora_actual = datetime(2023, 10, 24, 0, 0, 0, 0)
 
 def main() -> None:
     Hospital = cHospital(hora_actual)  # Pasa hora_actual como argumento
-    lista2=readFilePacientes(Hospital)
+    lista2 = readFilePacientes(Hospital)
     readFileEnfermeros(Hospital)
-    
-    i=0
+    i = 0
 
-   #while i<lista2:
-    Hospital.Enf_actuales()  # le da al hospital lista de los enfermeros de ese turno
-    Hospital.disp_enfermeros() # este ve cuales estan ocupados o no de de ese turno y atiendo en la entrada
-    Medico = cMedico(56)
-    tamEnf = len(Hospital.lista_enfermerosDisp)
-    tamPac = len(Hospital.listaPD)
-    resultado = Hospital.SeleccionProgDinamica(tamEnf, tamPac, Hospital.listaPD)
-    print(resultado)
-    pac=Hospital.SeleccionGreedy()
-    a=Medico.Atender_Paciente(pac)
+    pacientes_atendidos = []  # Lista para realizar un seguimiento de pacientes atendidos
 
-    if a==True: #lo pudo atender
-        Hospital.eliminar_pac(pac)
+    while i < len(lista2):
+        Hospital.lista_enfermerosDisp.clear()  # Vacía la lista de enfermeros por si cambia el turno
+        Hospital.Enf_actuales()  # Da al hospital lista de los enfermeros de ese turno
+        Hospital.disp_enfermeros()  # Verifica cuáles están ocupados o no de ese turno y atiende en la entrada
 
-       # i=i+1
-    
+        Medico = cMedico(56)
+        pac = Hospital.SeleccionGreedy()
 
+        # Comprueba si el paciente ya ha sido atendido
+        if pac not in pacientes_atendidos:
+            a = Medico.Atender_Paciente(pac)
+            print("Ha sido atendido el paciente con apellido")
+            apellido = pac.apellido
+            print(apellido)
+            if a:  # Si pudo atender al paciente, elimínalo de la lista de pacientes por atender
+                Hospital.eliminar_pac(pac)
+            pacientes_atendidos.append(pac)  # Agrega al paciente a la lista de atendidos
 
+        i = i + 1
 
-
-
-#    for i in range(1, len(lista2)):
-
-    #vemos los enfermeros_actuales()#veo q turno es
-    # vemos de los que hay, cuales estan de esos disponibles
-    #le asigno gravedad paciente (metodo greedy)
-
-    #se ejecutan las cosas y llamo a disp enfermeros
-    #aumento 15 minutos el tiempo actual IMPORTANTE SI OSI AL FINAL
 if __name__ == "__main__":
-  main()
+    main()
+
+
 
 

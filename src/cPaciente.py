@@ -4,7 +4,7 @@ class cPaciente:
         self.hora_de_llegada = datetime(2023, 10, 24, 0, 0, 0)
         self.nacimiento=nacimiento
         self.gravedad = "blanco"
-        self.tiempo_de_vida =-1 #por defecto
+        self.tiempo_de_vida = -1
         self.nombre=nombre
         self.idPaciente=id
         self.apellido=apellido

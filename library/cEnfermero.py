@@ -25,7 +25,7 @@ class cEnfermero:
     def colorSintomaGrave(self,paciente:cPaciente):
         listarojo={"paro_cardiaco","insuficiencia_respiratoria_grave","politraumatismo_grave"}
         listanaranja={"coma","convulsiones","hemorragia_digestiva","isquemia"}
-        listaamarillo={"cefalea_brusca","paresia","hipertensión_arterial","vertigo_con_afectación_vegetativa","sincope","urgencias_psiquiatricas"}
+        listaamarillo={"cefalea_brusca","paresia","hipertensión_arterial","vertigo_con_afectación_vegetativa","sincope","urg_psiquiatricas"}
         listaverde={"otalgias","odontologias","dolor_leve","traumatismo","esguince"}
         listaazul={"tos","cefalea_leve","resfriado"}
         

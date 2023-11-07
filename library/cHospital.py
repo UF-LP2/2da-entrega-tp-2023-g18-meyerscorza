@@ -1,9 +1,11 @@
 import random
+import copy
 from datetime import datetime,timedelta
 from src.cPaciente import cPaciente
 from library.cEnfermero import cEnfermero
 class cHospital:
     def __init__(self, hora_actual: datetime):
+        self.empeoraron=[]
         self.lista_urgentes = []          # Lista de pacientes urgentes (inicializo en vacío)
         self.lista_no_urgentes = []      # Lista de pacientes no urgentes (inicializo en vacío)
         self.lista_enfermerosDisp = []     # Lista de enfermeros disponibles (inicializo en vacío)
@@ -12,7 +14,7 @@ class cHospital:
         self.listaPD=[]    #para programacion dinamica
         self.hora_actual = hora_actual  # Almacena la hora_actual como atributo
         self.turno="madrugada"
-        self.cont=5 #contador para ir ingresando pacientes
+        self.cont=0 #contador para ir ingresando pacientes
 
     def cargar_listas(self, pac:cPaciente):#FUNCIONAAA
         if pac.gravedad == "rojo":
@@ -33,24 +35,29 @@ class cHospital:
                 j = j - 1
                 self.lista_no_urgentes[j + 1] = key
 
-    def Recorrer_pacientes(self)-> cPaciente: #FUNCIONAAA
-        self.cont=self.cont+1
-        return self.lista_pacientesTotales[self.cont]
+    def Recorrer_pacientes(self) -> cPaciente:
+        if self.cont < len(self.lista_pacientesTotales):
+            self.cont = self.cont + 1
+            return self.lista_pacientesTotales[self.cont - 1]
+        else:
+            return None
+    
+   
 
     def disp_enfermeros(self): #FUNCIONA
         i=0
         while i < len(self.lista_enfermerosDisp):#recorro la nueva lista
             if  (self.lista_enfermerosDisp[i].getDisp() == True): #si esta libre
                 self.lista_enfermerosDisp[i].set_disponibilidad()  # ahora esta ocupado
-                pac=self.Recorrer_pacientes()
-                self.lista_enfermerosDisp[i].AsignoGravedadGreedy(pac)
-                pac.hora_de_llegada=self.hora_actual
-                self.cargar_listas(pac)
-                self.cargado_lista_paraPD(pac)
-                self.lista_enfermerosDisp[i].set_disponibilidad()  # ahora esta desocupado
-
-            else:#significa que todos los enfermeros estan ocupados, caso extremo
-                print("Espere a ser atendido, todos nuestros enfermeros estan ocupados")
+                if not (len(self.lista_pacientesTotales)==self.cont):
+                    pac=self.Recorrer_pacientes()
+                    self.lista_enfermerosDisp[i].AsignoGravedadGreedy(pac)
+                    pac.hora_de_llegada=self.hora_actual
+                    self.cargar_listas(pac)
+                    self.cargado_lista_paraPD(pac)
+                    self.lista_enfermerosDisp[i].set_disponibilidad()  # ahora esta desocupado
+                else:
+                    print("No hay mas pacientes, hipp hip urra")
             i+=1
 
     def Enf_actuales(self): #FUNCIONA
@@ -106,43 +113,51 @@ class cHospital:
         #no se en cual de las dos de las lista esta, entocnes ponemos esas condiciones
         if pac in self.lista_urgentes:
             self.lista_urgentes.remove(pac)
-            if pac in self.listaPD:
-                self.listaPD.remove(pac)
-        else:
+        
+        if pac in self.lista_no_urgentes:
             self.lista_no_urgentes.remove(pac)
-            if pac in self.listaPD:
+            
+        if pac in self.listaPD:
                 self.listaPD.remove(pac)
+
+        if pac in self.empeoraron:
+            self.empeoraron.remove(pac)
+
+
                 
     #ALGORITMO DE GREEDY
     def SeleccionGreedy(self):
         # las lista_no_urgente está ordenada por el tiempo que le queda de vida a los pacientes
-        empeoraron = self.empeoro_pac_no_urgente()  # devuelve un array con los que empeoraron
+        self.empeoro_pac_no_urgente()  # devuelve un array con los que empeoraron
 
-        if self.lista_urgentes and len(empeoraron) == 0:
+        if self.lista_urgentes and len(self.empeoraron) == 0:
             # Mandamos el primero que es el más urgente, y cuando termina la atención se elimina de la lista
             return self.lista_urgentes[0]
-        elif self.lista_urgentes and len(empeoraron) > 0:
-            pac = self.dar_prioridad(empeoraron)  # va a tener que dar prioridad entre los más urgentes que empeoraron de la nada
+        elif self.lista_urgentes and len(self.empeoraron) > 0:
+            pac = self.dar_prioridad()  # va a tener que dar prioridad entre los más urgentes que empeoraron de la nada
             return pac
-        elif not self.lista_urgentes and len(empeoraron) > 0:
-            pac = self.dar_prioridad(empeoraron)
+        elif not self.lista_urgentes and len(self.empeoraron) > 0:
+            pac = self.dar_prioridad()
             return pac
         else:
             return self.lista_no_urgentes[0]
         
-    def dar_prioridad(self, empeoraron):
-        if self.lista_urgentes:# si no está vacío, agrega el de la lista de rojo para poder comparar
-            empeoraron.append(self.lista_urgentes[0])
+    def dar_prioridad(self):
+       # Crear una copia superficial de la lista
+        aux = copy.copy(self.empeoraron)
+
+        if self.lista_urgentes:
+            aux.append(self.lista_urgentes[0])
 
         paciente_mas_joven = None# inicializo paciente
         edad_mas_joven = float('4345')# inicializo edad para poder devolver la mínima
 
-        for i in range(len(empeoraron)):
-            paciente=empeoraron[i]
+        for i in range(len(aux)):
+            paciente=aux[i]
             edad_paciente = self.calcular_edad(paciente.getnacimiento())
             if edad_paciente < edad_mas_joven:# comparo si la edad que entra es menor a la anterior
                 edad_mas_joven = edad_paciente
-                paciente_mas_joven = empeoraron[i]
+                paciente_mas_joven = aux[i]
 
         return paciente_mas_joven
 
@@ -156,47 +171,60 @@ class cHospital:
         return edad
 
     def empeoro_pac_no_urgente(self):
-        empeoraron = []
-        for i in range(len(self.lista_no_urgentes)):
+        i = 0  # Inicializamos el contador
+        while i < len(self.lista_no_urgentes):
             prob_que_empeoro = 0  # Inicializamos la variable
 
             if self.lista_no_urgentes[i].gravedad == "naranja":
-                prob_que_empeoro = random.randint(1, 4)
+                prob_que_empeoro = 1
                 if prob_que_empeoro == 1:
                     self.lista_no_urgentes[i].gravedad = "rojo"
                     self.lista_no_urgentes[i].tiempo_de_vida = 0
-                    empeoraron.append(self.lista_no_urgentes[i])
+                    if not self.lista_no_urgentes[i] in self.empeoraron:
+                        self.empeoraron.append(self.lista_no_urgentes[i])
+                    self.lista_no_urgentes.pop(i)  # Removemos el paciente de la lista de no urgentes
+                else:
+                    i += 1  # Incrementamos el contador
 
             elif self.lista_no_urgentes[i].gravedad == "amarillo":
                 prob_que_empeoro = random.randint(1, 100)
                 if prob_que_empeoro == 1:
                     self.lista_no_urgentes[i].gravedad = "rojo"
                     self.lista_no_urgentes[i].tiempo_de_vida = 0
-                    empeoraron.append(self.lista_no_urgentes[i])
+                    if not self.lista_no_urgentes[i] in self.empeoraron:
+                        self.empeoraron.append(self.lista_no_urgentes[i])
+                    self.lista_no_urgentes.pop(i)
                 elif prob_que_empeoro == 2 or prob_que_empeoro == 3:
                     self.lista_no_urgentes[i].gravedad = "naranja"
                     self.calcular_tiempo_de_vida(self.lista_no_urgentes[i])
+                i += 1  # Incrementamos el contador
 
             elif self.lista_no_urgentes[i].gravedad == "verde":
                 prob_que_empeoro = random.randint(1, 100000)
                 if prob_que_empeoro == 1:
                     self.lista_no_urgentes[i].gravedad = "rojo"
                     self.lista_no_urgentes[i].tiempo_de_vida = 0
-                    empeoraron.append(self.lista_no_urgentes[i])
+                    if not self.lista_no_urgentes[i] in self.empeoraron:
+                        self.empeoraron.append(self.lista_no_urgentes[i])
+                    self.lista_no_urgentes.pop(i)
                 elif prob_que_empeoro == 2 or prob_que_empeoro == 30:
                     self.lista_no_urgentes[i].gravedad = "amarillo"
                     self.calcular_tiempo_de_vida(self.lista_no_urgentes[i])
+                i += 1  # Incrementamos el contador
+
             elif self.lista_no_urgentes[i].gravedad == "azul":
                 prob_que_empeoro = random.randint(1, 18000000)
                 if prob_que_empeoro == 1:
                     self.lista_no_urgentes[i].gravedad = "rojo"
                     self.lista_no_urgentes[i].tiempo_de_vida = 0
-                    empeoraron.append(self.lista_no_urgentes[i])
-                elif prob_que_empeoro > 20 or prob_que_empeoro < 50:
+                    if not self.lista_no_urgentes[i] in self.empeoraron:
+                        self.empeoraron.append(self.lista_no_urgentes[i])
+                    self.lista_no_urgentes.pop(i)
+                elif 20 == prob_que_empeoro or prob_que_empeoro == 30:
                     self.lista_no_urgentes[i].gravedad = "amarillo"
                     self.calcular_tiempo_de_vida(self.lista_no_urgentes[i])
+                i += 1  # Incrementamos el contador    
 
-        return empeoraron
 
     def calcular_tiempo_de_vida(self, pac):#FUNCIONA
         self.bajar_tiempo_vida()
@@ -218,23 +246,30 @@ class cHospital:
         #menos los urgentes, son los proximos en antenderse
         for i in range (len(self.lista_no_urgentes)):
             pac=self.lista_no_urgentes[i]
-            pac.tiempo_de_vida=pac.tiempo_de_vida - timedelta(minutes=5)
+            if pac.tiempo_de_vida >= 5:
+                pac.tiempo_de_vida=pac.tiempo_de_vida - 5
+            
             if pac.tiempo_de_vida<=5:
                 self.lista_urgentes.append(pac) #lo paso a urgentess si le queda poco tiempo de vida
+
 
         for i in range (len(self.listaPD)):
             pac=self.listaPD[i]
             if not (pac.gravedad == "rojo"):
-                pac.tiempo_de_vida=pac.tiempo_de_vida - timedelta(minutes=5)    
+                if pac.tiempo_de_vida >= 5:
+                    pac.tiempo_de_vida=pac.tiempo_de_vida - 5   
 
 
     def cargado_lista_paraPD(self,paciente:cPaciente): 
         self.listaPD.append(paciente)
 
-    ##ALGORITMO PROG DINAMICA
+
     def SeleccionProgDinamica(self, cantEnfer: int, Npacientes: int, pacientes: list):
         # Crear una matriz K de (Npacientes + 1) x (cantEnfer + 1) inicializada con ceros
         K = [[0 for x in range(cantEnfer + 1)] for x in range(Npacientes + 1)]
+
+        # Crear una matriz para registrar los IDs de los pacientes que se atenderán
+        pacientes_a_atender = [[0 for x in range(cantEnfer + 1)] for x in range(Npacientes + 1)]
 
         # Construir la matriz de manera ascendente
         for i in range(Npacientes + 1):  # Recorrer filas
@@ -242,24 +277,49 @@ class cHospital:
                 if i == 0 or w == 0:
                     K[i][w] = 0
 
-                elif pacientes[i - 1].tiempo_de_vida <= w:
-                    beneficio = pacientes[i - 1].tiempo_de_vida
-                    opcion_con_paciente = pacientes[i - 1]  # Almacenar una referencia al paciente
-                    otra_opcion = K[i - 1][w - pacientes[i - 1].tiempo_de_vida]
-
-                    if beneficio + otra_opcion > otra_opcion:
-                        K[i][w] = opcion_con_paciente
-                    else:
-                        K[i][w] = otra_opcion
-            
                 else:
-                    K[i][w] = K[i - 1][w]
+                    if (i-1)>0: #no soy el unico paciente
 
-        return K[Npacientes][cantEnfer]
+                        beneficio = pacientes[i - 1].tiempo_de_vida #el beneficio se define como la duración del tiempo de vida del paciente
+                        paciente_q_viene = pacientes[i - 1]  # Almacenar una referencia al paciente
+                        paciente_q_ya_esta = K[i - 1][w - pacientes[i - 1].tiempo_de_vida] # sin incluir al paciente actual
+
+                        if beneficio > paciente_q_ya_esta.tiempo_de_vida:
+                            K[i][w] = paciente_q_ya_esta
+                            pacientes_a_atender[i][w] = paciente_q_ya_esta.idPaciente
+
+                        elif beneficio == paciente_q_ya_esta: #los dos son rojos
+                            pac=self.dar_prioridadPD(paciente_q_viene,paciente_q_ya_esta)
+                            K[i][w] = pac
+                            pacientes_a_atender[i][w] = pac.idPaciente
+                        else:
+                            K[i][w] = paciente_q_viene
+                            pacientes_a_atender[i][w] = paciente_q_viene.idPaciente # Registrar el ID del paciente
+                    
+                    else:#soy el unico paciente
+                            paciente_q_viene = pacientes[i - 1] 
+                            K[i][w] = paciente_q_viene
+                            pacientes_a_atender[i][w] = paciente_q_viene.idPaciente  # Registrar el ID del paciente
+        
+        
+        
+        # Obtener la matriz de pacientes a atender para el caso óptimo
+        pacientes_a_atender_optimos = pacientes_a_atender[Npacientes][cantEnfer]
+
+        return pacientes_a_atender_optimos
 
 
- #-------------------------------------------------------------------------------------
+    def dar_prioridadPD(self,pacienteViene,pacienteYaEsta):
+        edad_pacienteViene = self.calcular_edad(pacienteViene.getnacimiento())
+        edad_pacienteEsta = self.calcular_edad(pacienteYaEsta.getnacimiento())
 
+        if edad_pacienteViene < edad_pacienteEsta:# comparo si la edad que entra es menor a la anterior
+            return pacienteViene
+        else:
+            return pacienteYaEsta
 
-
-
+    def buscadorPaciente(self,resultado):
+        tam=len(self.listaPD)
+        for i in range (tam):
+            if self.listaPD[i].idPaciente == resultado:
+                return self.listaPD[i] #retorno al paciente q tiene que ser atendido
