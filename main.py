@@ -6,8 +6,7 @@ from library.cEnfermero import cEnfermero
 from library.cMedico import cMedico
 from library.leer_archivos import readFileEnfermeros
 from library.leer_archivos import readFilePacientes
-from Interfaz import MainWindow
-from Interfaz import mainIn
+
 
 
 hora_actual = datetime(2023, 10, 24, 0, 0, 0, 0)
@@ -16,7 +15,7 @@ hora_actual = datetime(2023, 10, 24, 0, 0, 0, 0)
 pacientes_atendidos = [] # Lista para realizar un seguimiento de pacientes atendidos
 
 def main() -> None:
-    mainIn()
+   
     Hospital = cHospital(hora_actual)  # Pasa hora_actual como argumento
     lista2 = readFilePacientes(Hospital)
     readFileEnfermeros(Hospital)
