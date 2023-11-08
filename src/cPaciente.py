@@ -11,6 +11,7 @@ class cPaciente:
         self.sintoma1=sin1
         self.sintoma2=sin2
         self.sintoma3=sin3
+    
         
     def getnacimiento(self):
         return self.nacimiento

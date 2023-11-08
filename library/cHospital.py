@@ -15,6 +15,9 @@ class cHospital:
         self.hora_actual = hora_actual  # Almacena la hora_actual como atributo
         self.turno="madrugada"
         self.cont=0 #contador para ir ingresando pacientes
+    
+    def get_lista_pacientes(self):
+        return self.lista_pacientesTotales
 
     def cargar_listas(self, pac:cPaciente):#FUNCIONAAA
         if pac.gravedad == "rojo":
